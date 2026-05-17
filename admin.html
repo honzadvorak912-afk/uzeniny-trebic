@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin :: VÝBĚROVÉ UZENÁŘSKÉ SPECIALITY</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="admin.css">
 </head>
 <body>
 
@@ -288,76 +288,4 @@
 
       // Původní statické produkty
       html += '<div class="admin-section-divider">Původní produkty</div>';
-      STATIC_PRODUCTS.forEach(p => {
-        const hidden = hiddenPids.includes(p.pid);
-        html += '<div class="admin-product-card' + (hidden ? ' admin-product-card--hidden' : '') + '">' +
-          '<div class="admin-product-card__img"><div class="admin-product-card__no-img">&#x1F969;</div></div>' +
-          '<div class="admin-product-card__info">' +
-            '<div class="admin-product-card__name">' + p.name + (hidden ? ' <em style="color:var(--text-muted);font-size:0.75rem;">(skrytý)</em>' : '') + '</div>' +
-            '<div class="admin-product-card__price">' + p.price + '</div>' +
-          '</div>' +
-          '<button class="admin-product-card__delete" onclick="toggleStaticProduct(' + p.pid + ')" title="' + (hidden ? 'Zobrazit' : 'Skrýt') + '">' +
-            (hidden ? '&#x1F441;' : '&#x1F5D1;') +
-          '</button>' +
-        '</div>';
-      });
-
-      // Admin přidané produkty
-      if (products.length > 0) {
-        html += '<div class="admin-section-divider">Přidané produkty</div>';
-        html += products.map(p =>
-          '<div class="admin-product-card">' +
-          '<div class="admin-product-card__img">' +
-            (p.image ? '<img src="' + p.image + '" alt="' + p.name + '">' : '<div class="admin-product-card__no-img">&#x1F969;</div>') +
-          '</div>' +
-          '<div class="admin-product-card__info">' +
-            '<div class="admin-product-card__name">' + p.name + '</div>' +
-            '<div class="admin-product-card__price">' + p.price + '</div>' +
-            (p.note ? '<div class="admin-product-card__note">' + p.note + '</div>' : '') +
-          '</div>' +
-          '<button class="admin-product-card__delete" onclick="deleteAddedProduct(' + p.id + ')" title="Smazat">&#x1F5D1;</button>' +
-          '</div>'
-        ).join('');
-      }
-
-      list.innerHTML = html;
-    }
-
-    function toggleStaticProduct(pid) {
-      var hidden = JSON.parse(localStorage.getItem('hiddenProducts') || '[]');
-      var idx = hidden.indexOf(pid);
-      if (idx === -1) {
-        hidden.push(pid);
-      } else {
-        hidden.splice(idx, 1);
-      }
-      localStorage.setItem('hiddenProducts', JSON.stringify(hidden));
-      renderProducts();
-    }
-
-    function deleteAddedProduct(id) {
-      if (!confirm('Opravdu smazat tento produkt?')) return;
-      products = products.filter(p => p.id !== id);
-      saveProducts();
-      renderProducts();
-    }
-
-    function showFormError(msg) {
-      const el = document.getElementById('formError');
-      const ok = document.getElementById('formSuccess');
-      el.textContent = msg;
-      el.style.display = 'block';
-      ok.style.display = 'none';
-      setTimeout(() => el.style.display = 'none', 4000);
-    }
-    function showFormSuccess(msg) {
-      const el = document.getElementById('formSuccess');
-      const err = document.getElementById('formError');
-      el.textContent = msg;
-      el.style.display = 'block';
-      err.style.display = 'none';
-      setTimeout(() => el.style.display = 'none', 3000);
-    }
-  </script>
-</body>
-</html>
+      STATIC_PRODUCTS.forEac

@@ -1,0 +1,113 @@
+/* =============================================
+   KONTAKT
+   ============================================= */
+
+.kontakt-section {
+  background: var(--bg-section1);
+  padding: 4rem 2rem;
+}
+
+.kontakt-grid {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 3rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+.kontakt__heading {
+  color: var(--text-light);
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  margin-bottom: 2rem;
+}
+
+/* Info blocks */
+.kontakt-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.kontakt-info__row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.95rem;
+}
+
+.kontakt-info__row:first-child {
+  border-top: 1px solid var(--border);
+}
+
+.kontakt-info__label {
+  color: var(--text-muted);
+  min-width: 130px;
+  flex-shrink: 0;
+  font-size: 0.85rem;
+}
+
+.kontakt-info__value {
+  color: var(--text-light);
+  font-size: 0.95rem;
+}
+
+.kontakt-info__value a {
+  color: var(--accent);
+}
+
+/* Hours table */
+.hours-table {
+  margin-top: 2rem;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.hours-table td {
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.92rem;
+}
+
+.hours-table td:first-child {
+  color: var(--text-muted);
+  width: 120px;
+}
+
+.hours-table td:last-child {
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.hours-table .closed {
+  color: var(--red);
+}
+
+/* Address box */
+.address-box {
+  background: var(--bg-section2);
+  border-left: 3px solid var(--accent);
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.address-box p {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .kontakt-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .kontakt-section { padding: 3rem 1.2rem; }
+  .kontakt-info__row { flex-direction: column; gap: 0.2rem; }
+  .kontakt-info__label { min-width: unset; }
+}

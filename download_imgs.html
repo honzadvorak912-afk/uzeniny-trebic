@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Image Downloader</title></head>
+<body>
+<pre id="log">Starting...</pre>
+<script>
+const IMGS = [
+  {name:'hero.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/200000031-91f5d91f5f/avk-uzenar_stanek_VIZU%20(1)_2.jpg?ph=ee59ad6bb3'},
+  {name:'onas1.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000009-30d5830d5a/avk-uzenar_stanek_VIZU%20(1).jpg'},
+  {name:'onas2.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000010-49c5749c59/pristresek%20IMG_4158.jpg'},
+  {name:'mapa.png', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000014-cb95dcb95f/mapy.png'},
+  {name:'kanci_klobasa.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000064-7451274515/Kan%C4%8D%C3%AD.JPEG'},
+  {name:'veprova_klobasa.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000065-ac577ac578/Vep%C5%99ov%C3%A1.JPEG'},
+  {name:'sunkova_klobasa.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000066-6873168733/%C5%A0unka%20s%C3%BDr.JPEG'},
+  {name:'paprikas.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000067-0ab840ab85/Paprik%C3%A1%C5%A1.JPEG'},
+  {name:'poctivka.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000068-c53a5c53a7/Pocivka.JPEG'},
+  {name:'jeleni_klobasa.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000069-c0479c047c/Jelen%C3%AD.JPEG'},
+  {name:'seleci_klobasa.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000044-d6384d6386/Sele%C4%8D%C3%AD.JPEG'},
+  {name:'skopova.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000070-e9ea4e9ea5/Skopov%C3%A1.JPEG'},
+  {name:'parecky_syr.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000042-4836f48371/P%C3%A1re%C4%8Dky%20se%20s%C3%BDrem.JPEG'},
+  {name:'kabanos.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000071-3f7083f70b/Kabanos.JPEG'},
+  {name:'specacky.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000048-7015a70162/%C5%A0pek%C3%A1%C4%8Dky.JPEG'},
+  {name:'tyrolska.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000043-d8a19d8a1b/Tyrolsk%C3%A1.JPEG'},
+  {name:'minimadarky.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000049-854a6854a9/Minima%C4%8Farky.JPEG'},
+  {name:'kozacka.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000050-d1eb4d1eb6/Koz%C3%A1ck%C3%A1.JPEG'},
+  {name:'lucifer.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000051-c9350c9352/Lucifer.JPEG'},
+  {name:'gurman.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000052-e60b9e60ba/Gurm%C3%A1n.JPEG'},
+  {name:'konska.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000053-0749507497/Ko%C5%88sk%C3%A1.JPEG'},
+  {name:'golias.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000054-a8b8ca8b8e/Goli%C3%A1%C5%A1.JPEG'},
+  {name:'zitavska.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000055-6d9426d943/%C5%BDitavsk%C3%A1.JPEG'},
+  {name:'kanci_salam.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000072-aaa50aaa52/Kan%C4%8D%C3%AD%20sal%C3%A1m.JPEG'},
+  {name:'lovecky.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000056-6a2f56a2f8/Love%C4%8D%C3%A1k.JPEG'},
+  {name:'pegas.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000057-cde3ccde3e/Pegas.JPEG'},
+  {name:'vysocina.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000058-745fb74600/Vyso%C4%8Dina.JPEG'},
+  {name:'pekelny.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000074-a89e1a89e2/Pekeln%C3%BD.JPEG'},
+  {name:'sekana.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000075-33cfd33cff/Sekan%C3%A1.JPEG'},
+  {name:'tlacenka.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000045-6e7736e775/Tla%C4%8Denka-edit-20250620183457.JPEG'},
+  {name:'oravsky_bok.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000046-331e3331e5/Oravsk%C3%BD%20bok.JPEG'},
+  {name:'uzeny_bok.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000047-6d02e6d030/Bok.JPEG'},
+  {name:'uzene_sklo.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000061-da11ada11c/Uzen%C3%A9.JPEG'},
+  {name:'hruba_pastika.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000059-d4445d4447/Hrub%C3%A1.JPEG'},
+  {name:'trhane_maso.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000062-ac585ac588/Trhan%C3%A9.JPEG'},
+  {name:'jemna_pastika.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000063-30e8e30e90/Jemn%C3%A1.JPEG'},
+  {name:'skvarky.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000060-a68a3a68a5/%C5%A0kvarky.JPEG'},
+  {name:'kyta.jpg', url:'https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/system_preview_small_200000076-2fc7e2fc80/K%C3%BDta.JPEG'}
+];
+
+const log = document.getElementById('log');
+
+async function toBase64(url) {
+  const resp = await fetch(url);
+  const blob = await resp.blob();
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.readAsDataURL(blob);
+  });
+}
+
+async function sendToServer(name, data) {
+  const resp = await fetch('http://127.0.0.1:8765/', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({name, data})
+  });
+  return resp.json();
+}
+
+(async () => {
+  for (const img of IMGS) {
+    try {
+      log.textContent += '\nFetching ' + img.name + '...';
+      const b64 = await toBase64(img.url);
+      const result = await sendToServer(img.name, b64);
+      log.textContent += ' saved!';
+    } catch(e) {
+      log.textContent += ' ERROR: ' + e.message;
+    }
+  }
+  log.textContent += '\n\nDONE!';
+})();
+</script>
+</body>
+</html>

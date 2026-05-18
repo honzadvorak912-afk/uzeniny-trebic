@@ -4,43 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>O nás – Uzeniny Třebíč</title>
-  <meta name="description" content="Jsme malá prodejna v Třebíči zaměřená na prodej výběrových uzenářských specialit. To nejlepší z celého okolí u jediného okénka.">
+  <meta name="description" content="Jsme malá prodejna v Třebíči zaměřená na prodej výběrových uzenářských specialit.">
   <meta name="keywords" content="uzeniny Třebíč, o nás, prodejna uzenin, Třebíč Brněnská">
   <meta name="robots" content="index, follow">
   <meta name="author" content="Uzeniny Třebíč">
   <link rel="canonical" href="https://uzeniny-trebic.cz/o-nas.html">
-
-  <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="O nás – Uzeniny Třebíč">
-  <meta property="og:description" content="Jsme malá prodejna v Třebíči zaměřená na prodej výběrových uzenářských specialit. To nejlepší z celého okolí u jediného okénka.">
+  <meta property="og:description" content="Jsme malá prodejna v Třebíči zaměřená na prodej výběrových uzenářských specialit.">
   <meta property="og:image" content="https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/200000031-91f5d91f5f/avk-uzenar_stanek_VIZU%20(1)_2.jpg">
   <meta property="og:locale" content="cs_CZ">
-
-  <!-- Schema.org strukturovaná data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FoodEstablishment",
-    "name": "Uzeniny Třebíč",
-    "description": "Výběrové uzenářské speciality v Třebíči",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "Brněnská 332",
-      "addressLocality": "Třebíč",
-      "addressCountry": "CZ"
-    },
-    "openingHours": ["Mo-Fr 08:45-18:30", "Sa 08:00-14:00"],
-    "email": "lavkovsky@gmail.com",
-    "image": "https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/200000031-91f5d91f5f/avk-uzenar_stanek_VIZU%20(1)_2.jpg"
-  }
-  </script>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="o-nas.css">
 </head>
 <body>
-
-  <!-- NAVIGATION -->
   <nav class="navbar scrolled" id="navbar">
     <a href="index.html" class="navbar__logo">Uzeniny <span>Třebíč</span></a>
     <ul class="navbar__links">
@@ -49,12 +26,8 @@
       <li><a href="kontakt.html">Kontakt</a></li>
       <li><a href="kniha-navstev.html">Kniha návštěv</a></li>
     </ul>
-    <button class="hamburger" id="hamburger" aria-label="Otevřít menu">
-      <span></span><span></span><span></span>
-    </button>
+    <button class="hamburger" id="hamburger" aria-label="Otevřít menu"><span></span><span></span><span></span></button>
   </nav>
-
-  <!-- MOBILE NAV -->
   <div class="mobile-nav" id="mobileNav">
     <button class="mobile-nav__close" id="mobileNavClose" aria-label="Zavřít menu">&#x2715;</button>
     <a href="o-nas.html">O nás</a>
@@ -62,8 +35,6 @@
     <a href="kontakt.html">Kontakt</a>
     <a href="kniha-navstev.html">Kniha návštěv</a>
   </div>
-
-  <!-- HERO -->
   <section class="hero" style="min-height: 50vh;">
     <div class="hero__bg"></div>
     <div class="hero__content">
@@ -71,110 +42,36 @@
       <h1 class="hero__title">O <em>nás</em></h1>
     </div>
   </section>
-
-  <!-- BREADCRUMB -->
   <div class="breadcrumb">
     <a href="index.html">Úvodní stránka</a>
     <span> &gt; O nás</span>
   </div>
-
-  <!-- MAIN CONTENT -->
   <section class="onas-section">
     <div class="onas-grid">
-
-      <!-- LEFT: content -->
       <div class="onas__main">
         <h2 class="onas__heading reveal">Informace o nás</h2>
         <p class="onas__text reveal reveal-delay-1">Vítám všechny, kteří zavítali na náš web jsme malý obchůdek zabývající se prodejem uzenin pro všechny mlsouny.</p>
         <p class="onas__text reveal reveal-delay-1">To nejlepší z celého okolí u jediného okénka. Na tácek i do kabele, pochutnáte si vždy skvěle! Výběrové uzenářské speciality, teplá jídla (zabalíme sebou, speciální tácky pro konzumaci v autě). Za hezkého počasí možnost konzumace na stojáka přímo na místě, celoroční provoz.</p>
-
-        <!-- Photo gallery -->
-        <div class="gallery-heading reveal reveal-delay-2">
-          <h2>Fotogalerie: O nás</h2>
-        </div>
-
+        <div class="gallery-heading reveal reveal-delay-2"><h2>Fotogalerie: O nás</h2></div>
         <div class="photo-gallery">
-          <div class="photo-gallery__item reveal" onclick="openLightbox(this)">
-            <img src="https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/200000009-30d5830d5a/avk-uzenar_stanek_VIZU%20(1).jpg"
-                 alt="Výběrové uzenářské speciality - stánek">
-          </div>
-          <div class="photo-gallery__item reveal" onclick="openLightbox(this)">
-            <img src="https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/200000010-49c5749c59/pristresek%20IMG_4158.jpg"
-                 alt="Přístřešek - posezení">
-          </div>
-          <div class="photo-gallery__item reveal" onclick="openLightbox(this)">
-            <img src="https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/200000014-cb95dcb95f/mapy.png"
-                 alt="Mapa - kde nás najdete">
-          </div>
+          <div class="photo-gallery__item reveal" onclick="openLightbox(this)"><img src="https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/200000009-30d5830d5a/avk-uzenar_stanek_VIZU%20(1).jpg" alt="Výběrové uzenářské speciality - stánek"></div>
+          <div class="photo-gallery__item reveal" onclick="openLightbox(this)"><img src="https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/200000010-49c5749c59/pristresek%20IMG_4158.jpg" alt="Přístřešek - posezení"></div>
+          <div class="photo-gallery__item reveal" onclick="openLightbox(this)"><img src="https://ee59ad6bb3.cbaul-cdnwnd.com/f93dec64bc5c39da0f9301e7d431adca/200000014-cb95dcb95f/mapy.png" alt="Mapa - kde nás najdete"></div>
         </div>
       </div>
-
-      <!-- SIDEBAR -->
-      <aside class="sidebar">
-        <div class="sidebar__widget">
-          <h3>Kontakt</h3>
-          <span class="sidebar__contact-name">Uzeniny-trebic</span>
-          <a class="sidebar__contact-email" href="mailto:lavkovsky@gmail.com">lavkovsky@gmail.com</a>
-        </div>
-      </aside>
+      <aside class="sidebar"><div class="sidebar__widget"><h3>Kontakt</h3><span class="sidebar__contact-name">Uzeniny-trebic</span><a class="sidebar__contact-email" href="mailto:lavkovsky@gmail.com">lavkovsky@gmail.com</a></div></aside>
     </div>
   </section>
-
-  <!-- LIGHTBOX -->
-  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
-    <button class="lightbox__close" onclick="closeLightbox()">&#x2715;</button>
-    <img src="" alt="" id="lightboxImg">
-  </div>
-
-  <!-- FOOTER -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()"><button class="lightbox__close" onclick="closeLightbox()">&#x2715;</button><img src="" alt="" id="lightboxImg"></div>
   <footer>
     <span class="footer__copy">© 2026 Všechna práva vyhrazena.</span>
-    <div class="footer__contact">
-      <span class="sidebar__contact-name">Uzeniny-trebic</span> ·
-      <a href="mailto:lavkovsky@gmail.com">lavkovsky@gmail.com</a>
-    </div>
+    <div class="footer__contact"><span class="sidebar__contact-name">Uzeniny-trebic</span> · <a href="mailto:lavkovsky@gmail.com">lavkovsky@gmail.com</a></div>
   </footer>
-
   <script>
-    // Navbar
-    const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-      navbar.classList.toggle('scrolled', window.scrollY > 60);
-    });
-    const hamburger = document.getElementById('hamburger');
-    const mobileNav = document.getElementById('mobileNav');
-    const mobileNavClose = document.getElementById('mobileNavClose');
-    hamburger.addEventListener('click', () => mobileNav.classList.add('open'));
-    mobileNavClose.addEventListener('click', () => mobileNav.classList.remove('open'));
-    mobileNav.querySelectorAll('a').forEach(a => {
-      a.addEventListener('click', () => mobileNav.classList.remove('open'));
-    });
-
-    // Lightbox
-    function openLightbox(el) {
-      const img = el.querySelector('img');
-      document.getElementById('lightboxImg').src = img.src;
-      document.getElementById('lightboxImg').alt = img.alt;
-      document.getElementById('lightbox').classList.add('open');
-    }
-    function closeLightbox() {
-      document.getElementById('lightbox').classList.remove('open');
-    }
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') closeLightbox();
-    });
+    const navbar=document.getElementById('navbar');window.addEventListener('scroll',()=>{navbar.classList.toggle('scrolled',window.scrollY>60);});const hamburger=document.getElementById('hamburger');const mobileNav=document.getElementById('mobileNav');const mobileNavClose=document.getElementById('mobileNavClose');hamburger.addEventListener('click',()=>mobileNav.classList.add('open'));mobileNavClose.addEventListener('click',()=>mobileNav.classList.remove('open'));mobileNav.querySelectorAll('a').forEach(a=>{a.addEventListener('click',()=>mobileNav.classList.remove('open'));});function openLightbox(el){const img=el.querySelector('img');document.getElementById('lightboxImg').src=img.src;document.getElementById('lightboxImg').alt=img.alt;document.getElementById('lightbox').classList.add('open');}function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox();});
   </script>
-
   <script>
-    // ---- SCROLL REVEAL ----
-    const revealEls = document.querySelectorAll('.reveal');
-    if (revealEls.length > 0) {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.12 });
-      revealEls.forEach(el => obse
+    const revealEls=document.querySelectorAll('.reveal');if(revealEls.length>0){const observer=new IntersectionObserver((entries)=>{entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target);}});},{threshold:0.12});revealEls.forEach(el=>observer.observe(el));}
+  </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin :: VÝBĚROVÉ UZENÁŘSKÉ SPECIALITY</title>
+  <title>Admin :: VÃBÄROVÃ UZENÃÅSKÃ SPECIALITY</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="admin.css">
 </head>
@@ -12,13 +12,13 @@
   <!-- LOGIN OVERLAY -->
   <div class="login-overlay" id="loginOverlay">
     <div class="login-box">
-      <div class="login-box__logo">Uzeniny <span>Třebíč</span></div>
-      <p class="login-box__subtitle">Admin přístup</p>
+      <div class="login-box__logo">Uzeniny <span>TÅebÃ­Ä</span></div>
+      <p class="login-box__subtitle">Admin pÅÃ­stup</p>
       <form class="login-form" id="loginForm" onsubmit="return false;">
         <label class="login-form__label">Heslo</label>
         <input class="login-form__input" type="password" id="passwordInput" placeholder="Zadejte heslo..." autocomplete="current-password">
-        <div class="login-form__error" id="loginError">Nesprávné heslo. Zkuste to znovu.</div>
-        <button class="btn btn-primary login-form__btn" type="submit" id="loginBtn">PŘIHLÁSIT SE</button>
+        <div class="login-form__error" id="loginError">NesprÃ¡vnÃ© heslo. Zkuste to znovu.</div>
+        <button class="btn btn-primary login-form__btn" type="submit" id="loginBtn">PÅIHLÃSIT SE</button>
       </form>
     </div>
   </div>
@@ -28,14 +28,14 @@
 
     <!-- NAVIGATION -->
     <nav class="navbar scrolled" id="navbar">
-      <a href="index.html" class="navbar__logo">Uzeniny <span>Třebíč</span></a>
+      <a href="index.html" class="navbar__logo">Uzeniny <span>TÅebÃ­Ä</span></a>
       <div class="navbar__admin-badge">ADMIN</div>
     </nav>
 
     <div class="admin-content">
       <div class="admin-header">
         <p class="section__label">Administrace</p>
-        <h1 class="admin-title">Správa <em>produktů</em></h1>
+        <h1 class="admin-title">SprÃ¡va <em>produktÅ¯</em></h1>
         <div class="divider"></div>
       </div>
 
@@ -43,35 +43,35 @@
 
         <!-- ADD PRODUCT FORM -->
         <div class="admin-form-section">
-          <h2 class="admin-section-title">Přidat nový produkt</h2>
+          <h2 class="admin-section-title">PÅidat novÃ½ produkt</h2>
 
           <form class="admin-form" id="addProductForm" onsubmit="return false;">
             <div class="form-group">
-              <label class="form-label">Název produktu *</label>
-              <input class="form-input" type="text" id="productName" placeholder="např. Kančí klobása">
+              <label class="form-label">NÃ¡zev produktu *</label>
+              <input class="form-input" type="text" id="productName" placeholder="napÅ. KanÄÃ­ klobÃ¡sa">
             </div>
 
             <div class="form-group">
               <label class="form-label">Cena *</label>
-              <input class="form-input" type="text" id="productPrice" placeholder="např. 298 kč/kg">
+              <input class="form-input" type="text" id="productPrice" placeholder="napÅ. 298 kÄ/kg">
             </div>
 
             <div class="form-group">
-              <label class="form-label">Poznámka (volitelně)</label>
-              <input class="form-input" type="text" id="productNote" placeholder="např. Sezóní zboží">
+              <label class="form-label">PoznÃ¡mka (volitelnÄ)</label>
+              <input class="form-input" type="text" id="productNote" placeholder="napÅ. SezÃ³nÃ­ zboÅ¾Ã­">
             </div>
 
             <div class="form-group">
-              <label class="form-label">Obrázek produktu</label>
+              <label class="form-label">ObrÃ¡zek produktu</label>
               <div class="image-upload-area" id="imageUploadArea">
                 <input type="file" id="imageInput" accept="image/*" style="display:none;">
                 <div class="image-upload-placeholder" id="imagePlaceholder">
                   <span class="image-upload-icon">&#x1F4F7;</span>
-                  <span>Klikněte pro výběr obrázku</span>
-                  <span class="image-upload-hint">JPG, PNG, WEBP · max 5 MB</span>
+                  <span>KliknÄte pro vÃ½bÄr obrÃ¡zku</span>
+                  <span class="image-upload-hint">JPG, PNG, WEBP Â· max 5 MB</span>
                 </div>
                 <img class="image-preview" id="imagePreview" src="" alt="" style="display:none;">
-                <button class="image-remove-btn" id="imageRemoveBtn" style="display:none;" type="button">&#x2715; Odebrat obrázek</button>
+                <button class="image-remove-btn" id="imageRemoveBtn" style="display:none;" type="button">&#x2715; Odebrat obrÃ¡zek</button>
               </div>
             </div>
 
@@ -79,22 +79,22 @@
             <div class="form-success" id="formSuccess"></div>
 
             <button class="btn btn-primary admin-form__submit" type="submit" id="addProductBtn">
-              PŘIDAT PRODUKT
+              PÅIDAT PRODUKT
             </button>
           </form>
         </div>
 
         <!-- PRODUCT LIST -->
         <div class="admin-list-section">
-          <h2 class="admin-section-title">Všechny produkty <span class="admin-count" id="productCount"></span></h2>
-          <p class="admin-list-hint">Kliknutím na koš skryjete produkt ze stránky Produkty.</p>
+          <h2 class="admin-section-title">VÅ¡echny produkty <span class="admin-count" id="productCount"></span></h2>
+          <p class="admin-list-hint">KliknutÃ­m na koÅ¡ skryjete produkt ze strÃ¡nky Produkty.</p>
 
           <div class="admin-product-list" id="adminProductList">
-            <div class="admin-empty">Načítání...</div>
+            <div class="admin-empty">NaÄÃ­tÃ¡nÃ­...</div>
           </div>
 
           <a href="index.html" class="btn btn-outline admin-export-btn" id="viewProductsBtn" style="margin-top:1rem;display:inline-block;">
-            &#x2190; ZPĚT NA WEB
+            &#x2190; ZPÄT NA WEB
           </a>
         </div>
 
@@ -103,9 +103,9 @@
 
     <!-- FOOTER -->
     <footer>
-      <span class="footer__copy">© 2026 Všechna práva vyhrazena.</span>
+      <span class="footer__copy">Â© 2026 VÅ¡echna prÃ¡va vyhrazena.</span>
       <div class="footer__contact">
-        <span class="sidebar__contact-name">Uzeniny-trebic</span> ·
+        <span class="sidebar__contact-name">Uzeniny-trebic</span> Â·
         <a href="mailto:lavkovsky@gmail.com">lavkovsky@gmail.com</a>
       </div>
     </footer>
@@ -181,7 +181,7 @@
 
     function handleImageFile(file) {
       if (file.size > 5 * 1024 * 1024) {
-        showFormError('Obrázek je příliš velký (max 5 MB).');
+        showFormError('ObrÃ¡zek je pÅÃ­liÅ¡ velkÃ½ (max 5 MB).');
         return;
       }
       const reader = new FileReader();
@@ -205,44 +205,44 @@
       imageInput.value = '';
     });
 
-    // ---- STATICKÉ PRODUKTY (původní z produkty.html) ----
+    // ---- STATICKÃ PRODUKTY (pÅ¯vodnÃ­ z produkty.html) ----
     var STATIC_PRODUCTS = [
-      {pid:0,  name:'Kančí klobása',                    price:'298 kč/kg'},
-      {pid:1,  name:'Vepřová klobása',                  price:'245 kč/kg'},
-      {pid:2,  name:'Šunková klobása sýr a zelenina',   price:'295 kč/kg'},
-      {pid:3,  name:'Paprikáš klobás',                  price:'277 kč/kg'},
-      {pid:4,  name:'Poctivka - šunková libová klobása',price:'277 kč/kg'},
-      {pid:5,  name:'Jelení klobása',                   price:'298 kč/kg'},
-      {pid:6,  name:'Selečí klobása',                   price:'277 kč/kg'},
-      {pid:7,  name:'Skopová pastevecká',               price:'298 kč/kg'},
-      {pid:8,  name:'Párečky se sýrem',                 price:'277 kč/kg'},
-      {pid:9,  name:'Kabanos',                          price:'192 kč/kg'},
-      {pid:10, name:'Špekáčky',                         price:'187 kč/kg'},
-      {pid:11, name:'Tyrolská - Jódlovačka',            price:'245 kč/kg'},
-      {pid:12, name:'Minimaďarky',                      price:'373 kč/kg'},
-      {pid:13, name:'Kozácká klobása',                  price:'373 kč/kg'},
-      {pid:14, name:'Lucifer čabaj',                    price:'358 kč/kg'},
-      {pid:15, name:'Gurmán čabaj',                     price:'358 kč/kg'},
-      {pid:16, name:'Koňská čabaj',                     price:'370 kč/kg'},
-      {pid:17, name:'Goliáš čabaj',                     price:'358 kč/kg'},
-      {pid:18, name:'Žitavská klobása',                 price:'358 kč/kg'},
-      {pid:19, name:'Kančí salám',                      price:'348 kč/kg'},
-      {pid:20, name:'Lovecký salám',                    price:'295 kč/kg'},
-      {pid:21, name:'PEGAS - salám uherského typu',     price:'326 kč/kg'},
-      {pid:22, name:'Vysočina',                         price:'266 kč/kg'},
-      {pid:23, name:'Pekelný salám',                    price:'358 kč/kg'},
-      {pid:24, name:'Sekaná Afkos',                     price:'216 kč/kg'},
-      {pid:25, name:'Jitrničky',                        price:'155 kč/kg'},
-      {pid:26, name:'Jelítka',                          price:'155 kč/kg'},
-      {pid:27, name:'Tlačenka',                         price:'185 kč/kg'},
-      {pid:28, name:'Oravský bok obalovaný',            price:'338 kč/kg'},
-      {pid:29, name:'Uzený bok',                        price:'378 kč/kg'},
-      {pid:30, name:'Uzené maso ve skle',               price:'186 kč/ks'},
-      {pid:31, name:'Hrubá paštika',                    price:'54 kč/ks'},
-      {pid:32, name:'Trhané maso',                      price:'69 kč/ks'},
-      {pid:33, name:'Jemná paštika',                    price:'52 kč/ks'},
-      {pid:34, name:'Škvarky v sádle',                  price:'95 kč/kg'},
-      {pid:35, name:'Uzená kýta, kotleta, krkovice',   price:'378 kč/kg'},
+      {pid:0,  name:'KanÄÃ­ klobÃ¡sa',                    price:'298 kÄ/kg'},
+      {pid:1,  name:'VepÅovÃ¡ klobÃ¡sa',                  price:'245 kÄ/kg'},
+      {pid:2,  name:'Å unkovÃ¡ klobÃ¡sa sÃ½r a zelenina',   price:'295 kÄ/kg'},
+      {pid:3,  name:'PaprikÃ¡Å¡ klobÃ¡s',                  price:'277 kÄ/kg'},
+      {pid:4,  name:'Poctivka - Å¡unkovÃ¡ libovÃ¡ klobÃ¡sa',price:'277 kÄ/kg'},
+      {pid:5,  name:'JelenÃ­ klobÃ¡sa',                   price:'298 kÄ/kg'},
+      {pid:6,  name:'SeleÄÃ­ klobÃ¡sa',                   price:'277 kÄ/kg'},
+      {pid:7,  name:'SkopovÃ¡ pasteveckÃ¡',               price:'298 kÄ/kg'},
+      {pid:8,  name:'PÃ¡reÄky se sÃ½rem',                 price:'277 kÄ/kg'},
+      {pid:9,  name:'Kabanos',                          price:'192 kÄ/kg'},
+      {pid:10, name:'Å pekÃ¡Äky',                         price:'187 kÄ/kg'},
+      {pid:11, name:'TyrolskÃ¡ - JÃ³dlovaÄka',            price:'245 kÄ/kg'},
+      {pid:12, name:'MinimaÄarky',                      price:'373 kÄ/kg'},
+      {pid:13, name:'KozÃ¡ckÃ¡ klobÃ¡sa',                  price:'373 kÄ/kg'},
+      {pid:14, name:'Lucifer Äabaj',                    price:'358 kÄ/kg'},
+      {pid:15, name:'GurmÃ¡n Äabaj',                     price:'358 kÄ/kg'},
+      {pid:16, name:'KoÅskÃ¡ Äabaj',                     price:'370 kÄ/kg'},
+      {pid:17, name:'GoliÃ¡Å¡ Äabaj',                     price:'358 kÄ/kg'},
+      {pid:18, name:'Å½itavskÃ¡ klobÃ¡sa',                 price:'358 kÄ/kg'},
+      {pid:19, name:'KanÄÃ­ salÃ¡m',                      price:'348 kÄ/kg'},
+      {pid:20, name:'LoveckÃ½ salÃ¡m',                    price:'295 kÄ/kg'},
+      {pid:21, name:'PEGAS - salÃ¡m uherskÃ©ho typu',     price:'326 kÄ/kg'},
+      {pid:22, name:'VysoÄina',                         price:'266 kÄ/kg'},
+      {pid:23, name:'PekelnÃ½ salÃ¡m',                    price:'358 kÄ/kg'},
+      {pid:24, name:'SekanÃ¡ Afkos',                     price:'216 kÄ/kg'},
+      {pid:25, name:'JitrniÄky',                        price:'155 kÄ/kg'},
+      {pid:26, name:'JelÃ­tka',                          price:'155 kÄ/kg'},
+      {pid:27, name:'TlaÄenka',                         price:'185 kÄ/kg'},
+      {pid:28, name:'OravskÃ½ bok obalovanÃ½',            price:'338 kÄ/kg'},
+      {pid:29, name:'UzenÃ½ bok',                        price:'378 kÄ/kg'},
+      {pid:30, name:'UzenÃ© maso ve skle',               price:'186 kÄ/ks'},
+      {pid:31, name:'HrubÃ¡ paÅ¡tika',                    price:'54 kÄ/ks'},
+      {pid:32, name:'TrhanÃ© maso',                      price:'69 kÄ/ks'},
+      {pid:33, name:'JemnÃ¡ paÅ¡tika',                    price:'52 kÄ/ks'},
+      {pid:34, name:'Å kvarky v sÃ¡dle',                  price:'95 kÄ/kg'},
+      {pid:35, name:'UzenÃ¡ kÃ½ta, kotleta, krkovice',   price:'378 kÄ/kg'},
     ];
 
     // ---- PRODUCTS ----
@@ -254,7 +254,7 @@
       const price = document.getElementById('productPrice').value.trim();
       const note  = document.getElementById('productNote').value.trim();
 
-      if (!name) { showFormError('Zadejte název produktu.'); return; }
+      if (!name) { showFormError('Zadejte nÃ¡zev produktu.'); return; }
       if (!price) { showFormError('Zadejte cenu produktu.'); return; }
 
       const product = { id: Date.now(), name, price, note, image: currentImageDataUrl || null };
@@ -266,14 +266,14 @@
       document.getElementById('productPrice').value = '';
       document.getElementById('productNote').value = '';
       imageRemoveBtn.click();
-      showFormSuccess('Produkt byl úspěšně přidán!');
+      showFormSuccess('Produkt byl ÃºspÄÅ¡nÄ pÅidÃ¡n!');
     });
 
     function saveProducts() {
       try {
         localStorage.setItem('adminProducts', JSON.stringify(products));
       } catch(e) {
-        showFormError('Nepodařilo se uložit — obrázek je příliš velký. Zkuste menší obrázek.');
+        showFormError('NepodaÅilo se uloÅ¾it â obrÃ¡zek je pÅÃ­liÅ¡ velkÃ½. Zkuste menÅ¡Ã­ obrÃ¡zek.');
       }
     }
 
@@ -282,10 +282,81 @@
       const count = document.getElementById('productCount');
       const hiddenPids = JSON.parse(localStorage.getItem('hiddenProducts') || '[]');
       const totalVisible = STATIC_PRODUCTS.filter(p => !hiddenPids.includes(p.pid)).length + products.length;
-      count.textContent = '(' + totalVisible + ' viditelných)';
+      count.textContent = '(' + totalVisible + ' viditelnÃ½ch)';
 
       let html = '';
 
-      // Původní statické produkty
-      html += '<div class="admin-section-divider">Původní produkty</div>';
-      STATIC_PRODUCTS.forEac
+      // PÅ¯vodnÃ­ statickÃ© produkty
+      html += '<div class="admin-section-divider">PÅ¯vodnÃ­ produkty</div>';
+      STATIC_PRODUCTS.forEach(p => {
+        const hidden = hiddenPids.includes(p.pid);
+        html += '<div class="admin-product-card' + (hidden ? ' admin-product-card--hidden' : '') + '">' +
+          '<div class="admin-product-card__img"><div class="admin-product-card__no-img">&#x1F969;</div></div>' +
+          '<div class="admin-product-card__info">' +
+            '<div class="admin-product-card__name">' + p.name + (hidden ? ' <em style="color:var(--text-muted);font-size:0.75rem;">(skrytÃ½)</em>' : '') + '</div>' +
+            '<div class="admin-product-card__price">' + p.price + '</div>' +
+          '</div>' +
+          '<button class="admin-product-card__delete" onclick="toggleStaticProduct(' + p.pid + ')" title="' + (hidden ? 'Zobrazit' : 'SkrÃ½t') + '">' +
+            (hidden ? '&#x1F441;' : '&#x1F5D1;') +
+          '</button>' +
+        '</div>';
+      });
+
+      if (products.length > 0) {
+        html += '<div class="admin-section-divider">PÅidanÃ© produkty</div>';
+        html += products.map(p =>
+          '<div class="admin-product-card">' +
+          '<div class="admin-product-card__img">' +
+            (p.image ? '<img src="' + p.image + '" alt="' + p.name + '">' : '<div class="admin-product-card__no-img">&#x1F969;</div>') +
+          '</div>' +
+          '<div class="admin-product-card__info">' +
+            '<div class="admin-product-card__name">' + p.name + '</div>' +
+            '<div class="admin-product-card__price">' + p.price + '</div>' +
+            (p.note ? '<div class="admin-product-card__note">' + p.note + '</div>' : '') +
+          '</div>' +
+          '<button class="admin-product-card__delete" onclick="deleteAddedProduct(' + p.id + ')" title="Smazat">&#x1F5D1;</button>' +
+          '</div>'
+        ).join('');
+      }
+
+      list.innerHTML = html;
+    }
+
+    function toggleStaticProduct(pid) {
+      var hidden = JSON.parse(localStorage.getItem('hiddenProducts') || '[]');
+      var idx = hidden.indexOf(pid);
+      if (idx === -1) {
+        hidden.push(pid);
+      } else {
+        hidden.splice(idx, 1);
+      }
+      localStorage.setItem('hiddenProducts', JSON.stringify(hidden));
+      renderProducts();
+    }
+
+    function deleteAddedProduct(id) {
+      if (!confirm('Opravdy smazat tento produkt?')) return;
+      products = products.filter(p => p.id !== id);
+      saveProducts();
+      renderProducts();
+    }
+
+    function showFormError(msg) {
+      const el = document.getElementById('formError');
+      const ok = document.getElementById('formSuccess');
+      el.textContent = msg;
+      el.style.display = 'block';
+      ok.style.display = 'none';
+      setTimeout(() => el.style.display = 'none', 4000);
+    }
+    function showFormSuccess(msg) {
+      const el = document.getElementById('formSuccess');
+      const err = document.getElementById('formError');
+      el.textContent = msg;
+      el.style.display = 'block';
+      err.style.display = 'none';
+      setTimeout(() => el.style.display = 'none', 3000);
+    }
+  </script>
+</body>
+</html>

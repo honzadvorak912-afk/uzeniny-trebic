@@ -407,3 +407,16 @@
 .admin-product-card--hidden {
   opacity: 0.45;
 }
+
+
+
+/* --- Admin product list --- */
+.admin-product-item { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .65rem 0; border-bottom: 1px solid rgba(255,255,255,.07); }
+.admin-product-item:last-child { border-bottom: none; }
+.admin-product-info { display: flex; flex-direction: column; gap: .1rem; flex: 1; min-width: 0; }
+.admin-product-name { font-size: .95rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.admin-product-price { font-size: .8rem; color: var(--accent); opacity: .85; }
+.admin-toggle-btn { flex-shrink: 0; padding: .28rem .85rem; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; border-radius: 2px; border: 1px solid rgba(255,255,255,.2); background: transparent; color: rgba(255,255,255,.45); cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
+.admin-toggle-btn:hover { background: rgba(255,255,255,.08); color: var(--text); border-color: rgba(255,255,255,.4); }
+.admin-product-item--hidden .admin-product-name { opacity: .35; text-decoration: line-through; }
+.admin-product-item--hidden .admin-toggle-btn { border-color: var(--accent); color: var(--accent); }

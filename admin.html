@@ -287,4 +287,85 @@
       let html = '';
 
       // ---- Původní statické produkty ----
-      html += '<div class="admin-sect
+      html += '<div class="admin-section-divider">Původní produkty</div>';
+      STATIC_PRODUCTS.forEach((p) => {
+        const isHidden = hiddenPids.includes(p.pid);
+        html += `
+          <div class="admin-product-item${isHidden ? ' hidden' : ''}" data-pid="${p.pid}" data-type="static">
+            <div class="admin-product-info">
+              <span class="admin-product-name">${p.name}</span>
+              <span class="admin-product-price">${p.price}</span>
+            </div>
+            <div class="admin-product-actions">
+              <button class="admin-toggle-btn${isHidden ? ' show-btn' : ' hide-btn'}" data-pid="${p.pid}" data-type="static">
+                ${isHidden ? 'Zobrazit' : 'Skrýt'}
+              </button>
+            </div>
+          </div>`;
+      });
+
+      // ---- Přidané produkty ----
+      if (products.length > 0) {
+        html += '<div class="admin-section-divider">Přidané produkty</div>';
+        products.forEach((p, i) => {
+          html += `
+            <div class="admin-product-item" data-idx="${i}" data-type="custom">
+              ${p.image ? `<img class="admin-product-img" src="${p.image}" alt="">` : ''}
+              <div class="admin-product-info">
+                <span class="admin-product-name">${p.name}</span>
+                <span class="admin-product-price">${p.price}</span>
+                ${p.note ? `<span class="admin-product-note">${p.note}</span>` : ''}
+              </div>
+              <div class="admin-product-actions">
+                <button class="admin-delete-btn" data-idx="${i}" data-type="custom">Smazat</button>
+              </div>
+            </div>`;
+        });
+      }
+
+      list.innerHTML = html || '<div class="admin-empty">Žádné produkty.</div>';
+
+      // Toggle handlers pro statické produkty
+      list.querySelectorAll('.admin-toggle-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const pid = parseInt(btn.dataset.pid);
+          const hidden = JSON.parse(localStorage.getItem('hiddenProducts') || '[]');
+          if (hidden.includes(pid)) {
+            hidden.splice(hidden.indexOf(pid), 1);
+          } else {
+            hidden.push(pid);
+          }
+          localStorage.setItem('hiddenProducts', JSON.stringify(hidden));
+          renderProducts();
+        });
+      });
+
+      // Delete handlers pro přidané produkty
+      list.querySelectorAll('.admin-delete-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (!confirm('Opravdu chcete tento produkt trvale smazat?')) return;
+          const idx = parseInt(btn.dataset.idx);
+          products.splice(idx, 1);
+          saveProducts();
+          renderProducts();
+        });
+      });
+    }
+
+    function showFormError(msg) {
+      document.getElementById('formError').textContent = msg;
+      document.getElementById('formError').style.display = 'block';
+      document.getElementById('formSuccess').style.display = 'none';
+    }
+
+    function showFormSuccess(msg) {
+      document.getElementById('formSuccess').textContent = msg;
+      document.getElementById('formSuccess').style.display = 'block';
+      document.getElementById('formError').style.display = 'none';
+      setTimeout(() => document.getElementById('formSuccess').style.display = 'none', 3000);
+    }
+  </script>
+</body>
+</html>

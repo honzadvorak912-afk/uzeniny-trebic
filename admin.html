@@ -58,7 +58,7 @@
 
             <div class="form-group">
               <label class="form-label">Poznámka (volitelně)</label>
-              <input class="form-input" type="text" id="productNote" placeholder="např. Sezóní zboží">
+              <input class="form-input" type="text" id="productNote" placeholder="např. Sezónní zboží">
             </div>
 
             <div class="form-group">
@@ -87,7 +87,7 @@
         <!-- PRODUCT LIST -->
         <div class="admin-list-section">
           <h2 class="admin-section-title">Všechny produkty <span class="admin-count" id="productCount"></span></h2>
-          <p class="admin-list-hint">Kliknutím na koš skryjete produkt ze stránky Produkty.</p>
+          <p class="admin-list-hint">Skrýt = produkt zmizí ze stránky Produkty. Smazat = trvale odebere přidaný produkt.</p>
 
           <div class="admin-product-list" id="adminProductList">
             <div class="admin-empty">Načítání...</div>
@@ -116,15 +116,15 @@
     const ADMIN_PASSWORD = 'uzeniny2024';
 
     // ---- LOGIN ----
-    const loginOverlay = document.getElementById('loginOverlay');
-    const adminPanel   = document.getElementById('adminPanel');
-    const loginError   = document.getElementById('loginError');
+    const loginOverlay  = document.getElementById('loginOverlay');
+    const adminPanel    = document.getElementById('adminPanel');
+    const loginError    = document.getElementById('loginError');
     const passwordInput = document.getElementById('passwordInput');
 
     document.getElementById('loginBtn').addEventListener('click', () => {
       if (passwordInput.value === ADMIN_PASSWORD) {
         loginOverlay.style.display = 'none';
-        adminPanel.style.display = 'block';
+        adminPanel.style.display   = 'block';
         sessionStorage.setItem('adminAuth', '1');
       } else {
         loginError.style.display = 'block';
@@ -141,9 +141,8 @@
     // Check session
     if (sessionStorage.getItem('adminAuth') === '1') {
       loginOverlay.style.display = 'none';
-      adminPanel.style.display = 'block';
+      adminPanel.style.display   = 'block';
     }
-
 
     // ---- NAVBAR SCROLL ----
     const navbar = document.getElementById('navbar');
@@ -152,11 +151,11 @@
     });
 
     // ---- IMAGE UPLOAD ----
-    const imageUploadArea = document.getElementById('imageUploadArea');
-    const imageInput      = document.getElementById('imageInput');
+    const imageUploadArea  = document.getElementById('imageUploadArea');
+    const imageInput       = document.getElementById('imageInput');
     const imagePlaceholder = document.getElementById('imagePlaceholder');
-    const imagePreview    = document.getElementById('imagePreview');
-    const imageRemoveBtn  = document.getElementById('imageRemoveBtn');
+    const imagePreview     = document.getElementById('imagePreview');
+    const imageRemoveBtn   = document.getElementById('imageRemoveBtn');
     let currentImageDataUrl = null;
 
     imageUploadArea.addEventListener('click', (e) => {
@@ -220,22 +219,22 @@
       {pid:10, name:'Špekáčky',                         price:'187 kč/kg'},
       {pid:11, name:'Tyrolská - Jódlovačka',            price:'245 kč/kg'},
       {pid:12, name:'Minimaďarky',                      price:'373 kč/kg'},
-      {pid:13, name:'Kozácká� klobása',                  price:'373 kč/kg'},
+      {pid:13, name:'Kozácká klobása',                  price:'373 kč/kg'},
       {pid:14, name:'Lucifer čabaj',                    price:'358 kč/kg'},
       {pid:15, name:'Gurmán čabaj',                     price:'358 kč/kg'},
-      {pid:16, name:'KoŘská čabaj',                     price:'370 kč/kg'},
+      {pid:16, name:'Koňská čabaj',                     price:'370 kč/kg'},
       {pid:17, name:'Goliáš čabaj',                     price:'358 kč/kg'},
-      {pid:18, name:'źitavská klobása',                  price:'358 kč/kg'},
-      {pid:19, name:'Kančí salám',                       price:'348 kč/kg'},
+      {pid:18, name:'Žitavská klobása',                 price:'358 kč/kg'},
+      {pid:19, name:'Kančí salám',                      price:'348 kč/kg'},
       {pid:20, name:'Lovecký salám',                    price:'295 kč/kg'},
-      {pid:21, name:'PEGAS - salám uherskéhkč typu',   price:'326 kč/kg'},
+      {pid:21, name:'PEGAS - salám uherského typu',     price:'326 kč/kg'},
       {pid:22, name:'Vysočina',                         price:'266 kč/kg'},
       {pid:23, name:'Pekelný salám',                    price:'358 kč/kg'},
       {pid:24, name:'Sekaná Afkos',                     price:'216 kč/kg'},
       {pid:25, name:'Jitrničky',                        price:'155 kč/kg'},
       {pid:26, name:'Jelítka',                          price:'155 kč/kg'},
       {pid:27, name:'Tlačenka',                         price:'185 kč/kg'},
-      {pid:28, name:'Orav_ký bok obalovaný',            price:'338 kč/kg'},
+      {pid:28, name:'Oravský bok obalovaný',            price:'338 kč/kg'},
       {pid:29, name:'Uzený bok',                        price:'378 kč/kg'},
       {pid:30, name:'Uzené maso ve skle',               price:'186 kč/ks'},
       {pid:31, name:'Hrubá paštika',                    price:'54 kč/ks'},
@@ -254,17 +253,17 @@
       const price = document.getElementById('productPrice').value.trim();
       const note  = document.getElementById('productNote').value.trim();
 
-      if (!name) { showFormError('Zadejte název produktu.'); return; }
-      if (!price) { showFormError('Zadejte cenu produktu.'); return; }
+      if (!name)  { showFormError('Zadejte název produktu.'); return; }
+      if (!price) { showFormError('Zadejte cenu produktu.');  return; }
 
       const product = { id: Date.now(), name, price, note, image: currentImageDataUrl || null };
       products.unshift(product);
       saveProducts();
       renderProducts();
 
-      document.getElementById('productName').value = '';
+      document.getElementById('productName').value  = '';
       document.getElementById('productPrice').value = '';
-      document.getElementById('productNote').value = '';
+      document.getElementById('productNote').value  = '';
       imageRemoveBtn.click();
       showFormSuccess('Produkt byl úspěšně přidán!');
     });
@@ -278,86 +277,14 @@
     }
 
     function renderProducts() {
-      const list = document.getElementById('adminProductList');
-      const count = document.getElementById('productCount');
+      const list       = document.getElementById('adminProductList');
+      const count      = document.getElementById('productCount');
       const hiddenPids = JSON.parse(localStorage.getItem('hiddenProducts') || '[]');
+
       const totalVisible = STATIC_PRODUCTS.filter(p => !hiddenPids.includes(p.pid)).length + products.length;
       count.textContent = '(' + totalVisible + ' viditelných)';
 
       let html = '';
 
-      // Původní statické produkty
-      html += '<div class="admin-section-divider">Původní produkty</div>';
-      STATIC_PRODUCTS.forEach((p, i) => {
-        const isHidden = hiddenPids.includes(p.pid);
-        html += `<div class="admin-product-item${isHidden ? ' hidden' : ''}" data-pid="${p.pid}" data-type="static">
-          <div class="admin-product-info">
-            <span class="admin-product-name">${p.name}</span>
-            <span class="admin-product-price">${p.price}</span>
-          </div>
-          <button class="admin-toggle-btn${isHidden ? ' hidden-btn' : ''}" data-pid="${p.pid}" data-type="static">
-            ${isHidden ? 'Zobrazit' : 'Skryt'}
-          </button>
-        </div>`;
-      });
-
-      // Pridane produkty
-      if (products.length > 0) {
-        html += '<div class="admin-section-divider">Přidané produkty</div>';
-        products.forEach((p, i) => {
-          html += `<div class="admin-product-item" data-idx="${i}" data-type="custom">
-            ${p.image ? `<img class="admin-product-img" src="${p.image}" alt="">` : ''}
-            <div class="admin-product-info">
-              <span class="admin-product-name">${p.name}</span>
-              <span class="admin-product-price">${p.price}</span>
-              ${p.note ? `<span class="admin-product-note">${p.note}</span>` : ''}
-            </div>
-            <button class="admin-delete-btn" data-idx="${i}" data-type="custom">Ý</button>
-          </div>`;
-        });
-      }
-
-      list.innerHTML = html || '<div class="admin-empty">Načítání...</div>';
-
-      // Toggle handlers for static products
-      list.querySelectorAll('.admin-toggle-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const pid = parseInt(btn.dataset.pid);
-          if (hiddenPids.includes(pid)) {
-            hiddenPids.splice(hiddenPids.indexOf(pid), 1);
-          } else {
-            hiddenPids.push(pid);
-          }
-          localStorage.setItem('hiddenProducts', JSON.stringify(hiddenPids));
-          renderProducts();
-        });
-      });
-
-      // Delete handlers for custom products
-      list.querySelectorAll('.admin-delete-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const idx = parseInt(btn.dataset.idx);
-          products.splice(idx, 1);
-          saveProducts();
-          renderProducts();
-        });
-      });
-    }
-
-    function showFormError(msg) {
-      document.getElementById('formError').textContent = msg;
-      document.getElementById('formError').style.display = 'block';
-      document.getElementById('formSuccess').style.display = 'none';
-    }
-
-    function showFormSuccess(msg) {
-      document.getElementById('formSuccess').textContent = msg;
-      document.getElementById('formSuccess').style.display = 'block';
-      document.getElementById('formError').style.display = 'none';
-      setTimeout(() => document.getElementById('formSuccess').style.display = 'none', 3000);
-    }
-  </script>
-</body>
-</html>
+      // ---- Původní statické produkty ----
+      html += '<div class="admin-sect

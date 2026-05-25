@@ -5,7 +5,203 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin :: VÝBĚROVÉ UZENÁŘSKÉ SPECIALITY</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="admin.css">
+  <style>
+/* =============================================
+   ADMIN - Styles (inline)
+   ============================================= */
+
+.login-overlay {
+  position: fixed; inset: 0;
+  background: var(--bg-dark);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9999;
+}
+.login-box {
+  background: var(--bg-section1);
+  border: 1px solid var(--border);
+  padding: 3rem 2.5rem;
+  width: 100%; max-width: 420px;
+  text-align: center;
+}
+.login-box__logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem; color: var(--text-light);
+  margin-bottom: 0.3rem; letter-spacing: 0.03em;
+}
+.login-box__logo span { font-style: italic; color: var(--accent); }
+.login-box__subtitle {
+  color: var(--text-muted); font-size: 0.78rem;
+  letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 2rem;
+}
+.login-form { display: flex; flex-direction: column; gap: 1rem; }
+.login-form__label {
+  text-align: left; font-size: 0.75rem;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted);
+}
+.login-form__input {
+  background: var(--bg-dark); border: 1px solid var(--border);
+  color: var(--text-light); padding: 0.8rem 1rem;
+  font-family: 'Jost', sans-serif; font-size: 1rem;
+  width: 100%; outline: none; transition: border-color 0.3s;
+}
+.login-form__input:focus { border-color: var(--accent); }
+.login-form__error { display: none; color: var(--red); font-size: 0.82rem; text-align: left; }
+.login-form__btn { width: 100%; padding: 1rem; }
+
+.admin-panel { min-height: 100vh; }
+.navbar__admin-badge {
+  font-size: 0.65rem; letter-spacing: 0.2em;
+  color: var(--accent); border: 1px solid var(--accent);
+  padding: 0.2rem 0.6rem; margin-left: auto; margin-right: 1.5rem;
+}
+.admin-content { max-width: 1200px; margin: 0 auto; padding: 6rem 2rem 3rem; }
+.admin-header { margin-bottom: 3rem; }
+.admin-title {
+  color: var(--text-light);
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+}
+.admin-title em { font-style: italic; color: var(--accent); }
+
+.admin-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 3rem; align-items: start;
+}
+.admin-section-title {
+  font-family: 'Playfair Display', serif; font-size: 1.3rem;
+  color: var(--text-light); margin-bottom: 1.5rem;
+  padding-bottom: 0.8rem; border-bottom: 1px solid var(--border);
+}
+.admin-form { display: flex; flex-direction: column; gap: 1.2rem; }
+.form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+.form-label {
+  font-size: 0.72rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-muted);
+}
+.form-input {
+  background: var(--bg-section1); border: 1px solid var(--border);
+  color: var(--text-light); padding: 0.75rem 1rem;
+  font-family: 'Jost', sans-serif; font-size: 0.95rem;
+  outline: none; transition: border-color 0.3s; width: 100%;
+}
+.form-input:focus { border-color: var(--accent); }
+
+.image-upload-area {
+  background: var(--bg-section1); border: 1px dashed var(--border);
+  cursor: pointer; transition: border-color 0.3s;
+  position: relative; min-height: 120px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.image-upload-area:hover, .image-upload-area.drag-over { border-color: var(--accent); }
+.image-upload-placeholder {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0.4rem; padding: 1.5rem;
+  color: var(--text-muted); font-size: 0.85rem; text-align: center;
+}
+.image-upload-icon { font-size: 2rem; }
+.image-upload-hint { font-size: 0.72rem; color: var(--text-muted); opacity: 0.6; }
+.image-preview { width: 100%; max-height: 200px; object-fit: contain; padding: 0.5rem; }
+.image-remove-btn {
+  background: rgba(192,57,43,0.15); border: 1px solid var(--red);
+  color: var(--red); font-size: 0.72rem; letter-spacing: 0.05em;
+  padding: 0.4rem 1rem; cursor: pointer; margin: 0.5rem; transition: all 0.2s;
+}
+.image-remove-btn:hover { background: var(--red); color: #fff; }
+
+.form-error {
+  display: none; color: var(--red); font-size: 0.82rem;
+  background: rgba(192,57,43,0.1); border-left: 3px solid var(--red);
+  padding: 0.6rem 0.8rem;
+}
+.form-success {
+  display: none; color: #4caf50; font-size: 0.82rem;
+  background: rgba(76,175,80,0.1); border-left: 3px solid #4caf50;
+  padding: 0.6rem 0.8rem;
+}
+.admin-form__submit { margin-top: 0.5rem; padding: 1rem; }
+
+.admin-count { font-family: 'Jost', sans-serif; font-size: 0.85rem; color: var(--accent); }
+.admin-list-hint { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1.2rem; opacity: 0.7; }
+.admin-empty {
+  color: var(--text-muted); font-size: 0.9rem;
+  padding: 2rem; text-align: center; border: 1px dashed var(--border);
+}
+.admin-product-list {
+  display: flex; flex-direction: column; gap: 0.6rem;
+  max-height: 560px; overflow-y: auto; margin-bottom: 1.5rem;
+}
+
+/* Section divider */
+.admin-section-divider {
+  font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--accent); padding: 0.5rem 0 0.3rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0.4rem; margin-top: 0.6rem;
+}
+
+/* Product row */
+.admin-product-item {
+  display: flex; align-items: center; gap: 0.8rem;
+  background: var(--bg-section1); border: 1px solid var(--border);
+  padding: 0.6rem 0.8rem; transition: border-color 0.3s, opacity 0.3s;
+}
+.admin-product-item:hover { border-color: var(--accent); }
+.admin-product-item.is-hidden { opacity: 0.38; }
+
+.admin-product-img { width: 46px; height: 46px; object-fit: cover; flex-shrink: 0; }
+
+.admin-product-info {
+  flex: 1; min-width: 0;
+  display: flex; flex-direction: column; gap: 0.1rem;
+}
+.admin-product-name {
+  font-size: 0.88rem; color: var(--text-light); font-weight: 500;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.admin-product-price { font-size: 0.75rem; color: var(--accent); }
+.admin-product-note { font-size: 0.7rem; color: var(--text-muted); font-style: italic; }
+
+.admin-product-actions { display: flex; gap: 0.4rem; flex-shrink: 0; }
+
+/* Shared button base */
+.abtn {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.35rem 0.75rem; cursor: pointer;
+  border: 1px solid; background: transparent;
+  transition: background 0.18s, color 0.18s; white-space: nowrap;
+}
+
+/* Skrýt / Zobrazit — šedé, hover zlaté */
+.abtn-hide {
+  border-color: var(--border); color: var(--text-muted);
+}
+.abtn-hide:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Zobrazit (aktivní stav) — zlaté outline */
+.abtn-show {
+  border-color: var(--accent); color: var(--accent);
+}
+.abtn-show:hover { background: var(--accent); color: var(--bg-dark); }
+
+/* Smazat — červené */
+.abtn-del {
+  border-color: var(--red); color: var(--red);
+}
+.abtn-del:hover { background: var(--red); color: #fff; }
+
+.admin-export-btn { font-size: 0.72rem; padding: 0.7rem 1.5rem; }
+
+@media (max-width: 900px) {
+  .admin-grid { grid-template-columns: 1fr; }
+  .navbar__admin-badge { margin-left: auto; }
+}
+@media (max-width: 600px) {
+  .admin-content { padding: 5rem 1.2rem 2rem; }
+  .login-box { padding: 2rem 1.5rem; margin: 1rem; }
+}
+  </style>
 </head>
 <body>
 
@@ -23,10 +219,8 @@
     </div>
   </div>
 
-  <!-- ADMIN PANEL (hidden until login) -->
+  <!-- ADMIN PANEL -->
   <div class="admin-panel" id="adminPanel" style="display:none;">
-
-    <!-- NAVIGATION -->
     <nav class="navbar scrolled" id="navbar">
       <a href="index.html" class="navbar__logo">Uzeniny <span>Třebíč</span></a>
       <div class="navbar__admin-badge">ADMIN</div>
@@ -41,26 +235,22 @@
 
       <div class="admin-grid">
 
-        <!-- ADD PRODUCT FORM -->
+        <!-- FORM -->
         <div class="admin-form-section">
           <h2 class="admin-section-title">Přidat nový produkt</h2>
-
           <form class="admin-form" id="addProductForm" onsubmit="return false;">
             <div class="form-group">
               <label class="form-label">Název produktu *</label>
               <input class="form-input" type="text" id="productName" placeholder="např. Kančí klobása">
             </div>
-
             <div class="form-group">
               <label class="form-label">Cena *</label>
               <input class="form-input" type="text" id="productPrice" placeholder="např. 298 kč/kg">
             </div>
-
             <div class="form-group">
               <label class="form-label">Poznámka (volitelně)</label>
               <input class="form-input" type="text" id="productNote" placeholder="např. Sezónní zboží">
             </div>
-
             <div class="form-group">
               <label class="form-label">Obrázek produktu</label>
               <div class="image-upload-area" id="imageUploadArea">
@@ -74,34 +264,25 @@
                 <button class="image-remove-btn" id="imageRemoveBtn" style="display:none;" type="button">&#x2715; Odebrat obrázek</button>
               </div>
             </div>
-
             <div class="form-error" id="formError"></div>
             <div class="form-success" id="formSuccess"></div>
-
-            <button class="btn btn-primary admin-form__submit" type="submit" id="addProductBtn">
-              PŘIDAT PRODUKT
-            </button>
+            <button class="btn btn-primary admin-form__submit" type="submit" id="addProductBtn">PŘIDAT PRODUKT</button>
           </form>
         </div>
 
-        <!-- PRODUCT LIST -->
+        <!-- LIST -->
         <div class="admin-list-section">
           <h2 class="admin-section-title">Všechny produkty <span class="admin-count" id="productCount"></span></h2>
-          <p class="admin-list-hint">Skrýt = produkt zmizí ze stránky Produkty. Smazat = trvale odebere přidaný produkt.</p>
-
+          <p class="admin-list-hint">Skrýt/Zobrazit = viditelnost na webu &nbsp;·&nbsp; Smazat = trvalé odebráný</p>
           <div class="admin-product-list" id="adminProductList">
             <div class="admin-empty">Načítání...</div>
           </div>
-
-          <a href="index.html" class="btn btn-outline admin-export-btn" id="viewProductsBtn" style="margin-top:1rem;display:inline-block;">
-            &#x2190; ZPĚT NA WEB
-          </a>
+          <a href="index.html" class="btn btn-outline admin-export-btn" style="margin-top:1rem;display:inline-block;">&#x2190; ZPĚT NA WEB</a>
         </div>
 
       </div>
     </div>
 
-    <!-- FOOTER -->
     <footer>
       <span class="footer__copy">© 2026 Všechna práva vyhrazena.</span>
       <div class="footer__contact">
@@ -112,10 +293,9 @@
   </div>
 
   <script>
-    // ---- CONFIG ----
     const ADMIN_PASSWORD = 'uzeniny2024';
 
-    // ---- LOGIN ----
+    // LOGIN
     const loginOverlay  = document.getElementById('loginOverlay');
     const adminPanel    = document.getElementById('adminPanel');
     const loginError    = document.getElementById('loginError');
@@ -132,25 +312,21 @@
         passwordInput.focus();
       }
     });
-
     passwordInput.addEventListener('keydown', e => {
       if (e.key === 'Enter') document.getElementById('loginBtn').click();
       loginError.style.display = 'none';
     });
-
-    // Check session
     if (sessionStorage.getItem('adminAuth') === '1') {
       loginOverlay.style.display = 'none';
       adminPanel.style.display   = 'block';
     }
 
-    // ---- NAVBAR SCROLL ----
-    const navbar = document.getElementById('navbar');
+    // NAVBAR
     window.addEventListener('scroll', () => {
-      navbar.classList.toggle('scrolled', window.scrollY > 60);
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
     });
 
-    // ---- IMAGE UPLOAD ----
+    // IMAGE UPLOAD
     const imageUploadArea  = document.getElementById('imageUploadArea');
     const imageInput       = document.getElementById('imageInput');
     const imagePlaceholder = document.getElementById('imagePlaceholder');
@@ -158,57 +334,41 @@
     const imageRemoveBtn   = document.getElementById('imageRemoveBtn');
     let currentImageDataUrl = null;
 
-    imageUploadArea.addEventListener('click', (e) => {
-      if (e.target !== imageRemoveBtn) imageInput.click();
-    });
-
-    imageUploadArea.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      imageUploadArea.classList.add('drag-over');
-    });
+    imageUploadArea.addEventListener('click', e => { if (e.target !== imageRemoveBtn) imageInput.click(); });
+    imageUploadArea.addEventListener('dragover', e => { e.preventDefault(); imageUploadArea.classList.add('drag-over'); });
     imageUploadArea.addEventListener('dragleave', () => imageUploadArea.classList.remove('drag-over'));
-    imageUploadArea.addEventListener('drop', (e) => {
-      e.preventDefault();
-      imageUploadArea.classList.remove('drag-over');
-      const file = e.dataTransfer.files[0];
-      if (file) handleImageFile(file);
+    imageUploadArea.addEventListener('drop', e => {
+      e.preventDefault(); imageUploadArea.classList.remove('drag-over');
+      if (e.dataTransfer.files[0]) handleImageFile(e.dataTransfer.files[0]);
     });
-
-    imageInput.addEventListener('change', () => {
-      if (imageInput.files[0]) handleImageFile(imageInput.files[0]);
-    });
+    imageInput.addEventListener('change', () => { if (imageInput.files[0]) handleImageFile(imageInput.files[0]); });
 
     function handleImageFile(file) {
-      if (file.size > 5 * 1024 * 1024) {
-        showFormError('Obrázek je příliš velký (max 5 MB).');
-        return;
-      }
+      if (file.size > 5*1024*1024) { showFormError('Obrázek je příliš velký (max 5 MB).'); return; }
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.onload = e => {
         currentImageDataUrl = e.target.result;
         imagePreview.src = currentImageDataUrl;
         imagePreview.style.display = 'block';
         imagePlaceholder.style.display = 'none';
-        imageRemoveBtn.style.display = 'inline-block';
+        imageRemoveBtn.style.display = 'block';
       };
       reader.readAsDataURL(file);
     }
-
-    imageRemoveBtn.addEventListener('click', (e) => {
+    imageRemoveBtn.addEventListener('click', e => {
       e.stopPropagation();
       currentImageDataUrl = null;
-      imagePreview.src = '';
-      imagePreview.style.display = 'none';
+      imagePreview.src = ''; imagePreview.style.display = 'none';
       imagePlaceholder.style.display = 'flex';
       imageRemoveBtn.style.display = 'none';
       imageInput.value = '';
     });
 
-    // ---- STATICKÉ PRODUKTY (původní z produkty.html) ----
+    // STATIC PRODUCTS
     var STATIC_PRODUCTS = [
       {pid:0,  name:'Kančí klobása',                    price:'298 kč/kg'},
       {pid:1,  name:'Vepřová klobása',                  price:'245 kč/kg'},
-      {pid:2,  name:'Šunková klobása sýr a zelenina',   price:'295 kč/kg'},
+      {pid:2,  name:'Šunková klobása sýr a zelenine',   price:'295 kč/kg'},
       {pid:3,  name:'Paprikáš klobás',                  price:'277 kč/kg'},
       {pid:4,  name:'Poctivka - šunková libová klobása',price:'277 kč/kg'},
       {pid:5,  name:'Jelení klobása',                   price:'298 kč/kg'},
@@ -222,7 +382,7 @@
       {pid:13, name:'Kozácká klobása',                  price:'373 kč/kg'},
       {pid:14, name:'Lucifer čabaj',                    price:'358 kč/kg'},
       {pid:15, name:'Gurmán čabaj',                     price:'358 kč/kg'},
-      {pid:16, name:'Koňská čabaj',                     price:'370 kč/kg'},
+      {pid:16, name:'Ko�ská čabaj',                     price:'370 kč/kg'},
       {pid:17, name:'Goliáš čabaj',                     price:'358 kč/kg'},
       {pid:18, name:'Žitavská klobása',                 price:'358 kč/kg'},
       {pid:19, name:'Kančí salám',                      price:'348 kč/kg'},
@@ -244,23 +404,18 @@
       {pid:35, name:'Uzená kýta, kotleta, krkovice',   price:'378 kč/kg'},
     ];
 
-    // ---- PRODUCTS ----
     var products = JSON.parse(localStorage.getItem('adminProducts') || '[]');
     renderProducts();
 
+    // ADD PRODUCT
     document.getElementById('addProductBtn').addEventListener('click', () => {
       const name  = document.getElementById('productName').value.trim();
       const price = document.getElementById('productPrice').value.trim();
       const note  = document.getElementById('productNote').value.trim();
-
       if (!name)  { showFormError('Zadejte název produktu.'); return; }
       if (!price) { showFormError('Zadejte cenu produktu.');  return; }
-
-      const product = { id: Date.now(), name, price, note, image: currentImageDataUrl || null };
-      products.unshift(product);
-      saveProducts();
-      renderProducts();
-
+      products.unshift({ id: Date.now(), name, price, note, image: currentImageDataUrl || null });
+      saveProducts(); renderProducts();
       document.getElementById('productName').value  = '';
       document.getElementById('productPrice').value = '';
       document.getElementById('productNote').value  = '';
@@ -269,88 +424,99 @@
     });
 
     function saveProducts() {
-      try {
-        localStorage.setItem('adminProducts', JSON.stringify(products));
-      } catch(e) {
-        showFormError('Nepodařilo se uložit — obrázek je příliš velký. Zkuste menší obrázek.');
-      }
+      try { localStorage.setItem('adminProducts', JSON.stringify(products)); }
+      catch(e) { showFormError('Nepodařilo se uložit — obrázek je příliš velký.'); }
     }
 
     function renderProducts() {
       const list       = document.getElementById('adminProductList');
       const count      = document.getElementById('productCount');
-      const hiddenPids = JSON.parse(localStorage.getItem('hiddenProducts') || '[]');
+      const hiddenStat = JSON.parse(localStorage.getItem('hiddenProducts')       || '[]');
+      const hiddenCust = JSON.parse(localStorage.getItem('hiddenCustomProducts') || '[]');
+      const deletedStat = JSON.parse(localStorage.getItem('deletedStaticProducts') || '[]');
 
-      const totalVisible = STATIC_PRODUCTS.filter(p => !hiddenPids.includes(p.pid)).length + products.length;
-      count.textContent = '(' + totalVisible + ' viditelných)';
+      const visStatic = STATIC_PRODUCTS.filter(p => !deletedStat.includes(p.pid) && !hiddenStat.includes(p.pid)).length;
+      const visCust   = products.filter((p,i) => !hiddenCust.includes(i)).length;
+      count.textContent = '(' + (visStatic + visCust) + ' viditelných)';
 
       let html = '';
 
-      // ---- Původní statické produkty ----
-      html += '<div class="admin-section-divider">Původní produkty</div>';
-      STATIC_PRODUCTS.forEach((p) => {
-        const isHidden = hiddenPids.includes(p.pid);
-        html += `
-          <div class="admin-product-item${isHidden ? ' hidden' : ''}" data-pid="${p.pid}" data-type="static">
+      // --- Původní produkty ---
+      const activeStatic = STATIC_PRODUCTS.filter(p => !deletedStat.includes(p.pid));
+      if (activeStatic.length > 0) {
+        html += '<div class="admin-section-divider">Původní produkty</div>';
+        activeStatic.forEach(p => {
+          const hidden = hiddenStat.includes(p.pid);
+          html += `<div class="admin-product-item${hidden ? ' is-hidden' : ''}">
             <div class="admin-product-info">
               <span class="admin-product-name">${p.name}</span>
               <span class="admin-product-price">${p.price}</span>
             </div>
             <div class="admin-product-actions">
-              <button class="admin-toggle-btn${isHidden ? ' show-btn' : ' hide-btn'}" data-pid="${p.pid}" data-type="static">
-                ${isHidden ? 'Zobrazit' : 'Skrýt'}
-              </button>
+              <button class="abtn ${hidden ? 'abtn-show' : 'abtn-hide'}" data-action="toggle-static" data-pid="${p.pid}">${hidden ? 'Zobrazit' : 'Skrýt'}</button>
+              <button class="abtn abtn-del" data-action="delete-static" data-pid="${p.pid}">Smazat</button>
             </div>
           </div>`;
-      });
+        });
+      }
 
-      // ---- Přidané produkty ----
+      // --- Přidané produkty ---
       if (products.length > 0) {
         html += '<div class="admin-section-divider">Přidané produkty</div>';
         products.forEach((p, i) => {
-          html += `
-            <div class="admin-product-item" data-idx="${i}" data-type="custom">
-              ${p.image ? `<img class="admin-product-img" src="${p.image}" alt="">` : ''}
-              <div class="admin-product-info">
-                <span class="admin-product-name">${p.name}</span>
-                <span class="admin-product-price">${p.price}</span>
-                ${p.note ? `<span class="admin-product-note">${p.note}</span>` : ''}
-              </div>
-              <div class="admin-product-actions">
-                <button class="admin-delete-btn" data-idx="${i}" data-type="custom">Smazat</button>
-              </div>
-            </div>`;
+          const hidden = hiddenCust.includes(i);
+          html += `<div class="admin-product-item${hidden ? ' is-hidden' : ''}">
+            ${p.image ? `<img class="admin-product-img" src="${p.image}" alt="">` : ''}
+            <div class="admin-product-info">
+              <span class="admin-product-name">${p.name}</span>
+              <span class="admin-product-price">${p.price}</span>
+              ${p.note ? `<span class="admin-product-note">${p.note}</span>` : ''}
+            </div>
+            <div class="admin-product-actions">
+              <button class="abtn ${hidden ? 'abtn-show' : 'abtn-hide'}" data-action="toggle-custom" data-idx="${i}">${hidden ? 'Zobrazit' : 'Skrýt'}</button>
+              <button class="abtn abtn-del" data-action="delete-custom" data-idx="${i}">Smazat</button>
+            </div>
+          </div>`;
         });
       }
 
       list.innerHTML = html || '<div class="admin-empty">Žádné produkty.</div>';
 
-      // Toggle handlers pro statické produkty
-      list.querySelectorAll('.admin-toggle-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const pid = parseInt(btn.dataset.pid);
-          const hidden = JSON.parse(localStorage.getItem('hiddenProducts') || '[]');
-          if (hidden.includes(pid)) {
-            hidden.splice(hidden.indexOf(pid), 1);
-          } else {
-            hidden.push(pid);
-          }
-          localStorage.setItem('hiddenProducts', JSON.stringify(hidden));
-          renderProducts();
-        });
-      });
+      list.addEventListener('click', e => {
+        const btn = e.target.closest('[data-action]');
+        if (!btn) return;
+        e.stopPropagation();
+        const action = btn.dataset.action;
 
-      // Delete handlers pro přidané produkty
-      list.querySelectorAll('.admin-delete-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          if (!confirm('Opravdu chcete tento produkt trvale smazat?')) return;
+        if (action === 'toggle-static') {
+          const pid = parseInt(btn.dataset.pid);
+          const h = JSON.parse(localStorage.getItem('hiddenProducts') || '[]');
+          if (h.includes(pid)) { h.splice(h.indexOf(pid), 1); } else { h.push(pid); }
+          localStorage.setItem('hiddenProducts', JSON.stringify(h));
+          renderProducts();
+
+        } else if (action === 'delete-static') {
+          if (!confirm('Opravdu chcete trvale smazat tento produkt?')) return;
+          const pid = parseInt(btn.dataset.pid);
+          const d = JSON.parse(localStorage.getItem('deletedStaticProducts') || '[]');
+          d.push(pid);
+          localStorage.setItem('deletedStaticProducts', JSON.stringify(d));
+          renderProducts();
+
+        } else if (action === 'toggle-custom') {
+          const idx = parseInt(btn.dataset.idx);
+          const h = JSON.parse(localStorage.getItem('hiddenCustomProducts') || '[]');
+          if (h.includes(idx)) { h.splice(h.indexOf(idx), 1); } else { h.push(idx); }
+          localStorage.setItem('hiddenCustomProducts', JSON.stringify(h));
+          renderProducts();
+
+        } else if (action === 'delete-custom') {
+          if (!confirm('Opravdu chcete trvale smazat tento produkt?')) return;
           const idx = parseInt(btn.dataset.idx);
           products.splice(idx, 1);
           saveProducts();
           renderProducts();
-        });
+        }
       });
     }
 
@@ -359,7 +525,6 @@
       document.getElementById('formError').style.display = 'block';
       document.getElementById('formSuccess').style.display = 'none';
     }
-
     function showFormSuccess(msg) {
       document.getElementById('formSuccess').textContent = msg;
       document.getElementById('formSuccess').style.display = 'block';
@@ -369,3 +534,4 @@
   </script>
 </body>
 </html>
+                

@@ -382,7 +382,7 @@
       {pid:13, name:'Kozácká klobása',                  price:'373 kč/kg'},
       {pid:14, name:'Lucifer čabaj',                    price:'358 kč/kg'},
       {pid:15, name:'Gurmán čabaj',                     price:'358 kč/kg'},
-      {pid:16, name:'Ko�ská čabaj',                     price:'370 kč/kg'},
+      {pid:16, name:'Koňská kábaj',                     price:'370 kč/kg'},
       {pid:17, name:'Goliáš čabaj',                     price:'358 kč/kg'},
       {pid:18, name:'Žitavská klobása',                 price:'358 kč/kg'},
       {pid:19, name:'Kančí salám',                      price:'348 kč/kg'},
@@ -397,15 +397,53 @@
       {pid:28, name:'Oravský bok obalovaný',            price:'338 kč/kg'},
       {pid:29, name:'Uzený bok',                        price:'378 kč/kg'},
       {pid:30, name:'Uzené maso ve skle',               price:'186 kč/ks'},
-      {pid:31, name:'Hrubá paštika',                    price:'54 kč/ks'},
+      {pid:31, name:'Hrubá paštika',                     price:'54 kč/ks'},
       {pid:32, name:'Trhané maso',                      price:'69 kč/ks'},
-      {pid:33, name:'Jemná paštika',                    price:'52 kč/ks'},
-      {pid:34, name:'Škvarky v sádle',                  price:'95 kč/kg'},
+      {pid:33, name:'Jemná paštika',                     price:'52 kč/ks'},
+      {pid:34, name:'Škvarky v sádle',                   price:'95 kč/kg'},
       {pid:35, name:'Uzená kýta, kotleta, krkovice',   price:'378 kč/kg'},
     ];
 
     var products = JSON.parse(localStorage.getItem('adminProducts') || '[]');
     renderProducts();
+
+    // PRODUCT LIST ACTIONS (one listener on the container)
+    document.getElementById('adminProductList').addEventListener('click', e => {
+      const btn = e.target.closest('[data-action]');
+      if (!btn) return;
+      e.stopPropagation();
+      const action = btn.dataset.action;
+
+      if (action === 'toggle-static') {
+        const pid = parseInt(btn.dataset.pid);
+        const h = JSON.parse(localStorage.getItem('hiddenProducts') || '[]');
+        if (h.includes(pid)) { h.splice(h.indexOf(pid), 1); } else { h.push(pid); }
+        localStorage.setItem('hiddenProducts', JSON.stringify(h));
+        renderProducts();
+
+      } else if (action === 'delete-static') {
+        if (!confirm('Opravdu chcete trvale smazat tento produkt?')) return;
+        const pid = parseInt(btn.dataset.pid);
+        const d = JSON.parse(localStorage.getItem('deletedStaticProducts') || '[]');
+        d.push(pid);
+        localStorage.setItem('deletedStaticProducts', JSON.stringify(d));
+        renderProducts();
+
+      } else if (action === 'toggle-custom') {
+        const idx = parseInt(btn.dataset.idx);
+        const h = JSON.parse(localStorage.getItem('hiddenCustomProducts') || '[]');
+        if (h.includes(idx)) { h.splice(h.indexOf(idx), 1); } else { h.push(idx); }
+        localStorage.setItem('hiddenCustomProducts', JSON.stringify(h));
+        renderProducts();
+
+      } else if (action === 'delete-custom') {
+        if (!confirm('Opravdu chcete trvale smazat tento produkt?')) return;
+        const idx = parseInt(btn.dataset.idx);
+        products.splice(idx, 1);
+        saveProducts();
+        renderProducts();
+      }
+    });
 
     // ADD PRODUCT
     document.getElementById('addProductBtn').addEventListener('click', () => {
@@ -474,50 +512,13 @@
             </div>
             <div class="admin-product-actions">
               <button class="abtn ${hidden ? 'abtn-show' : 'abtn-hide'}" data-action="toggle-custom" data-idx="${i}">${hidden ? 'Zobrazit' : 'Skrýt'}</button>
-              <button class="abtn abtn-del" data-action="delete-custom" data-idx="${i}">Smazat</button>
+              <button class="abtn abtn-del" data-action="delete-custom" data-idx="${i}">Smezat</button>
             </div>
           </div>`;
         });
       }
 
       list.innerHTML = html || '<div class="admin-empty">Žádné produkty.</div>';
-
-      list.addEventListener('click', e => {
-        const btn = e.target.closest('[data-action]');
-        if (!btn) return;
-        e.stopPropagation();
-        const action = btn.dataset.action;
-
-        if (action === 'toggle-static') {
-          const pid = parseInt(btn.dataset.pid);
-          const h = JSON.parse(localStorage.getItem('hiddenProducts') || '[]');
-          if (h.includes(pid)) { h.splice(h.indexOf(pid), 1); } else { h.push(pid); }
-          localStorage.setItem('hiddenProducts', JSON.stringify(h));
-          renderProducts();
-
-        } else if (action === 'delete-static') {
-          if (!confirm('Opravdu chcete trvale smazat tento produkt?')) return;
-          const pid = parseInt(btn.dataset.pid);
-          const d = JSON.parse(localStorage.getItem('deletedStaticProducts') || '[]');
-          d.push(pid);
-          localStorage.setItem('deletedStaticProducts', JSON.stringify(d));
-          renderProducts();
-
-        } else if (action === 'toggle-custom') {
-          const idx = parseInt(btn.dataset.idx);
-          const h = JSON.parse(localStorage.getItem('hiddenCustomProducts') || '[]');
-          if (h.includes(idx)) { h.splice(h.indexOf(idx), 1); } else { h.push(idx); }
-          localStorage.setItem('hiddenCustomProducts', JSON.stringify(h));
-          renderProducts();
-
-        } else if (action === 'delete-custom') {
-          if (!confirm('Opravdu chcete trvale smazat tento produkt?')) return;
-          const idx = parseInt(btn.dataset.idx);
-          products.splice(idx, 1);
-          saveProducts();
-          renderProducts();
-        }
-      });
     }
 
     function showFormError(msg) {
@@ -531,7 +532,4 @@
       document.getElementById('formError').style.display = 'none';
       setTimeout(() => document.getElementById('formSuccess').style.display = 'none', 3000);
     }
-  </script>
-</body>
-</html>
-                
+  </scrip

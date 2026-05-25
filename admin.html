@@ -368,7 +368,7 @@
     var STATIC_PRODUCTS = [
       {pid:0,  name:'Kančí klobása',                    price:'298 kč/kg'},
       {pid:1,  name:'Vepřová klobása',                  price:'245 kč/kg'},
-      {pid:2,  name:'Šunková klobása sýr a zelenine',   price:'295 kč/kg'},
+      {pid:2,  name:'Šunková klobása sýr a zelenina',   price:'295 kč/kg'},
       {pid:3,  name:'Paprikáš klobás',                  price:'277 kč/kg'},
       {pid:4,  name:'Poctivka - šunková libová klobása',price:'277 kč/kg'},
       {pid:5,  name:'Jelení klobása',                   price:'298 kč/kg'},
@@ -382,7 +382,7 @@
       {pid:13, name:'Kozácká klobása',                  price:'373 kč/kg'},
       {pid:14, name:'Lucifer čabaj',                    price:'358 kč/kg'},
       {pid:15, name:'Gurmán čabaj',                     price:'358 kč/kg'},
-      {pid:16, name:'Koňská kábaj',                     price:'370 kč/kg'},
+      {pid:16, name:'Koňská klobása',                   price:'370 kč/kg'},
       {pid:17, name:'Goliáš čabaj',                     price:'358 kč/kg'},
       {pid:18, name:'Žitavská klobása',                 price:'358 kč/kg'},
       {pid:19, name:'Kančí salám',                      price:'348 kč/kg'},
@@ -397,10 +397,10 @@
       {pid:28, name:'Oravský bok obalovaný',            price:'338 kč/kg'},
       {pid:29, name:'Uzený bok',                        price:'378 kč/kg'},
       {pid:30, name:'Uzené maso ve skle',               price:'186 kč/ks'},
-      {pid:31, name:'Hrubá paštika',                     price:'54 kč/ks'},
+      {pid:31, name:'Hrubá paštika',                    price:'54 kč/ks'},
       {pid:32, name:'Trhané maso',                      price:'69 kč/ks'},
-      {pid:33, name:'Jemná paštika',                     price:'52 kč/ks'},
-      {pid:34, name:'Škvarky v sádle',                   price:'95 kč/kg'},
+      {pid:33, name:'Jemná paštika',                    price:'52 kč/ks'},
+      {pid:34, name:'Škvarky v sádle',                  price:'95 kč/kg'},
       {pid:35, name:'Uzená kýta, kotleta, krkovice',   price:'378 kč/kg'},
     ];
 
@@ -491,7 +491,7 @@
               <span class="admin-product-price">${p.price}</span>
             </div>
             <div class="admin-product-actions">
-              <button class="abtn ${hidden ? 'abtn-show' : 'abtn-hide'}" data-action="toggle-static" data-pid="${p.pid}">${hidden ? 'Zobrazit' : 'Skrýt'}</button>
+              <button class="abtn ${hidden ? 'abtn-show' : 'abtn-hide'}" data-action="toggle-static" data-pid="${p.pid}">${hidden ? 'Zobrazit' : 'Skrýx"}</button>
               <button class="abtn abtn-del" data-action="delete-static" data-pid="${p.pid}">Smazat</button>
             </div>
           </div>`;
@@ -512,7 +512,7 @@
             </div>
             <div class="admin-product-actions">
               <button class="abtn ${hidden ? 'abtn-show' : 'abtn-hide'}" data-action="toggle-custom" data-idx="${i}">${hidden ? 'Zobrazit' : 'Skrýt'}</button>
-              <button class="abtn abtn-del" data-action="delete-custom" data-idx="${i}">Smezat</button>
+              <button class="abtn abtn-del" data-action="delete-custom" data-idx="${i}">Smazat</button>
             </div>
           </div>`;
         });
@@ -532,4 +532,6 @@
       document.getElementById('formError').style.display = 'none';
       setTimeout(() => document.getElementById('formSuccess').style.display = 'none', 3000);
     }
-  </scrip
+  </script>
+</body>
+</html>

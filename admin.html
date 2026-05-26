@@ -273,7 +273,7 @@
         <!-- LIST -->
         <div class="admin-list-section">
           <h2 class="admin-section-title">Všechny produkty <span class="admin-count" id="productCount"></span></h2>
-          <p class="admin-list-hint">Skrýt/Zobrazit = viditelnost na webu &nbsp;·&nbsp; Smazat = trvalé odebráný</p>
+          <p class="admin-list-hint">Skrýt/Zobrazit = viditelnost na webu &nbsp;·&nbsp; Smazat = trvalé odebrání</p>
           <div class="admin-product-list" id="adminProductList">
             <div class="admin-empty">Načítání...</div>
           </div>
@@ -382,9 +382,9 @@
       {pid:13, name:'Kozácká klobása',                  price:'373 kč/kg'},
       {pid:14, name:'Lucifer čabaj',                    price:'358 kč/kg'},
       {pid:15, name:'Gurmán čabaj',                     price:'358 kč/kg'},
-      {pid:16, name:'Koňská klobása',                   price:'370 kč/kg'},
+      {pid:16, name:'Koňská čabaj',                     price:'370 kč/kg'},
       {pid:17, name:'Goliáš čabaj',                     price:'358 kč/kg'},
-      {pid:18, name:'Žitavská klobása',                 price:'358 kč/kg'},
+      {pid:18, name:'Źitavská klobása',                 price:'358 kč/kg'},
       {pid:19, name:'Kančí salám',                      price:'348 kč/kg'},
       {pid:20, name:'Lovecký salám',                    price:'295 kč/kg'},
       {pid:21, name:'PEGAS - salám uherského typu',     price:'326 kč/kg'},
@@ -491,7 +491,7 @@
               <span class="admin-product-price">${p.price}</span>
             </div>
             <div class="admin-product-actions">
-              <button class="abtn ${hidden ? 'abtn-show' : 'abtn-hide'}" data-action="toggle-static" data-pid="${p.pid}">${hidden ? 'Zobrazit' : 'Skrýx"}</button>
+              <button class="abtn ${hidden ? 'abtn-show' : 'abtn-hide'}" data-action="toggle-static" data-pid="${p.pid}">${hidden ? 'Zobrazit' : 'Skrýt'}</button>
               <button class="abtn abtn-del" data-action="delete-static" data-pid="${p.pid}">Smazat</button>
             </div>
           </div>`;

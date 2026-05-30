@@ -437,7 +437,7 @@
     var hamburger = document.getElementById('hamburger');
     var mobileNav = document.getElementById('mobileNav');
     var mobileNavClose = document.getElementById('mobileNavClose');
-    hamburger.addEventListener('click', function() { mobileNav.classList.add('open'); });
+    hamburger.addEventListener('click', function() { mobileNav.classList.toggle('open'); });
     mobileNavClose.addEventListener('click', function() { mobileNav.classList.remove('open'); });
     mobileNav.querySelectorAll('a').forEach(function(a) {
       a.addEventListener('click', function() { mobileNav.classList.remove('open'); });

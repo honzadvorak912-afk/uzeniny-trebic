@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin :: VÃBÄROVÃ UZENÃÅSKÃ SPECIALITY</title>
+  <title>Admin :: VÝBĚROVÉ UZENÁŘSKÉ SPECIALITY</title>
   <link rel="stylesheet" href="style.css">
   <style>
 .login-overlay{position:fixed;inset:0;background:var(--bg-dark);display:flex;align-items:center;justify-content:center;z-index:9999}
@@ -22,11 +22,7 @@
 .admin-content{max-width:1200px;margin:0 auto;padding:6rem 2rem 3rem}
 .admin-header{margin-bottom:3rem}
 .admin-title{color:var(--text-light);font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3vw,2.8rem)}
-.admin-title em{font-style:italic;color:var(--accent)}
-.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
-.admin-section-title{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--text-light);margin-bottom:1.5rem;padding-bottom:0.8rem;border-bottom:1px solid var(--border)}
-.admin-form{display:flex;flex-direction:column;gap:1.2rem}
-.form-group{display:flex;flex-direction:column;gap:0.4rem}
+.admin-title em{font-style:;flex-direction:column;gap:0.4rem}
 .form-label{font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted)}
 .form-input{background:var(--bg-section1);border:1px solid var(--border);color:var(--text-light);padding:0.75rem 1rem;font-family:'Jost',sans-serif;font-size:0.95rem;outline:none;transition:border-color 0.3s;width:100%}
 .form-input:focus{border-color:var(--accent)}
@@ -73,79 +69,79 @@
 <body>
   <div class="login-overlay" id="loginOverlay">
     <div class="login-box">
-      <div class="login-box__logo">Uzeniny <span>TÅebÃ­Ä</span></div>
-      <p class="login-box__subtitle">Admin pÅÃ­stup</p>
+      <div class="login-box__logo">Uzeniny <span>Třebíč</span></div>
+      <p class="login-box__subtitle">Admin přístup</p>
       <form class="login-form" id="loginForm" onsubmit="return false;">
         <label class="login-form__label">Heslo</label>
         <input class="login-form__input" type="password" id="passwordInput" placeholder="Zadejte heslo..." autocomplete="current-password">
         <label class="login-form__label">GitHub Token</label>
         <input class="login-form__input" type="password" id="tokenInput" placeholder="ghp_..." autocomplete="off">
-        <div class="login-form__error" id="loginError">NesprÃ¡vnÃ© heslo. Zkuste to znovu.</div>
-        <button class="btn btn-primary login-form__btn" type="submit" id="loginBtn">PÅIHLÃSIT SE</button>
+        <div class="login-form__error" id="loginError">Nesprávné heslo. Zkuste to znovu.</div>
+        <button class="btn btn-primary login-form__btn" type="submit" id="loginBtn">PŘIHLÁSIT SE</button>
       </form>
     </div>
   </div>
 
   <div class="admin-panel" id="adminPanel" style="display:none;">
     <nav class="navbar scrolled" id="navbar">
-      <a href="index.html" class="navbar__logo">Uzeniny <span>TÅebÃ­Ä</span></a>
+      <a href="index.html" class="navbar__logo">Uzeniny <span>Třebíč</span></a>
       <div class="navbar__admin-badge">ADMIN</div>
     </nav>
     <div class="admin-content">
       <div class="admin-header">
         <p class="section__label">Administrace</p>
-        <h1 class="admin-title">SprÃ¡va <em>produktÅ¯</em></h1>
+        <h1 class="admin-title">Správa <em>produktů</em></h1>
         <div class="divider"></div>
       </div>
       <div class="admin-grid">
         <div class="admin-form-section">
-          <h2 class="admin-section-title">PÅidat novÃ½ produkt</h2>
+          <h2 class="admin-section-title">Přidat nový produkt</h2>
           <form class="admin-form" id="addProductForm" onsubmit="return false;">
             <div class="form-group">
-              <label class="form-label">NÃ¡zev produktu *</label>
-              <input class="form-input" type="text" id="productName" placeholder="napÅ. KanÄÃ­ klobÃ¡sa">
+              <label class="form-label">Název produktu *</label>
+              <input class="form-input" type="text" id="productName" placeholder="např. Kančí klobása">
             </div>
             <div class="form-group">
               <label class="form-label">Cena *</label>
-              <input class="form-input" type="text" id="productPrice" placeholder="napÅ. 298 kÄ/kg">
+              <input class="form-input" type="text" id="productPrice" placeholder="např. 298 kč/kg">
             </div>
             <div class="form-group">
-              <label class="form-label">PoznÃ¡mka (volitelnÄ)</label>
-              <input class="form-input" type="text" id="productNote" placeholder="napÅ. SezÃ³nnÃ­ zboÅ¾Ã­">
+              <label class="form-label">Poznámka (volitelně)</label>
+              <input class="form-input" type="text" id="productNote" placeholder="např. Sezónní zboží">
             </div>
             <div class="form-group">
-              <label class="form-label">ObrÃ¡zek produktu</label>
+              <label class="form-label">Obrázek produktu</label>
               <div class="image-upload-area" id="imageUploadArea">
                 <input type="file" id="imageInput" accept="image/*" style="display:none;">
                 <div class="image-upload-placeholder" id="imagePlaceholder">
-                  <span class="image-upload-icon">ð·</span>
-                  <span>KliknÄte pro vÃ½bÄr obrÃ¡zku</span>
-                  <span class="image-upload-hint">JPG, PNG, WEBP Â· max 5 MB</span>
+                  <span class="image-upload-icon">📷</span>
+                     <span>Klikněte pro výběr obrázku</span>
+                  <span class="image-upload-hint">JPG, PNG, WEBP · max 5 MB</span>
                 </div>
                 <img class="image-preview" id="imagePreview" src="" alt="" style="display:none;">
-                <button class="image-remove-btn" id="imageRemoveBtn" style="display:none;" type="button">â Odebrat obrÃ¡zek</button>
+                <button class="image-remove-btn" id="imageRemoveBtn" style="display:none;" type="button">✕ Odebrat obrázek</button>
               </div>
             </div>
             <div class="form-error" id="formError"></div>
             <div class="form-success" id="formSuccess"></div>
-            <button class="btn btn-primary admin-form__submit" type="submit" id="addProductBtn">PÅIDAT PRODUKT</button>
+            <button class="btn btn-primary admin-form__submit" type="submit" id="addProductBtn">PŘIDAT PRODUKT</button>
             <div class="sync-status" id="syncStatus"></div>
           </form>
         </div>
         <div class="admin-list-section">
-          <h2 class="admin-section-title">VÅ¡echny produkty <span class="admin-count" id="productCount"></span></h2>
-          <p class="admin-list-hint">SkrÃ½t/Zobrazit = viditelnost na webu Â· Smazat = trvalÃ© odebrÃ¡nÃ­</p>
+          <h2 class="admin-section-title">Všechny produkty <span class="admin-count" id="productCount"></span></h2>
+          <p class="admin-list-hint">Skrýt/Zobrazit = viditelnost na webu · Smazat = trvalé odebrání</p>
           <div class="admin-product-list" id="adminProductList">
-            <div class="admin-empty">NaÄÃ­tÃ¡nÃ­ z databÃ¡ze...</div>
+            <div class="admin-empty">Načítání z databáze...</div>
           </div>
-          <a href="index.html" class="btn btn-outline" style="font-size:0.72rem;padding:0.7rem 1.5rem;margin-top:1rem;display:inline-block;">â ZPÄT NA WEB</a>
+          <a href="index.html" class="btn btn-outline" style="font-size:0.72rem;padding:0.7rem 1.5rem;margin-top:1rem;display:inline-block;">← ZPĚT NA WEB</a>
         </div>
       </div>
     </div>
     <footer>
-      <span class="footer__copy">Â© 2026 VÅ¡echna prÃ¡va vyhrazena.</span>
+      <span class="footer__copy">© 2026 Všechna práva vyhrazena.</span>
       <div class="footer__contact">
-        <span class="sidebar__contact-name">Uzeniny-trebic</span> Â·
+        <span class="sidebar__contact-name">Uzeniny-trebic</span> ·
         <a href="mailto:lavkovsky@gmail.com">lavkovsky@gmail.com</a>
       </div>
     </footer>
@@ -178,21 +174,21 @@ async function ghLoad() {
 }
 
 async function ghSave(msg) {
-  setSyncStatus('syncing','UklÃ¡dÃ¡m do databÃ¡ze...');
+  setSyncStatus('syncing','Ukládám do databáze...');
   const j = {adminProducts:customProducts,hiddenProducts:hiddenStatic,deletedStaticProducts:deletedStatic,hiddenCustomProducts:hiddenCustom};
   const r = await fetch(GH_API,{
     method:'PUT',
     headers:{'Authorization':'token ' + GH_TOKEN,'Content-Type':'application/json'},
-    body:JSON.stringify({message:msg||'Aktualizace produktÅ¯',content:btoa(unescape(encodeURIComponent(JSON.stringify(j,null,2)))),sha:_sha})
+    body:JSON.stringify({message:msg||'Aktualizace produktů',content:btoa(unescape(encodeURIComponent(JSON.stringify(j,null,2)))),sha:_sha})
   });
   const d = await r.json();
   if (d.commit) {
     _sha = d.content.sha;
-    setSyncStatus('ok','â UloÅ¾eno â viditelnÃ© na vÅ¡ech zaÅÃ­zenÃ­ch');
+    setSyncStatus('ok','✓ Uloženo — viditelné na všech zařízeních');
     setTimeout(()=>setSyncStatus('',''),4000);
     return true;
   }
-  setSyncStatus('err','â Chyba: ' + (d.message||'neznÃ¡mÃ¡'));
+  setSyncStatus('err','✗ Chyba: ' + (d.message||'neznámá'));
   return false;
 }
 
@@ -233,10 +229,10 @@ if (sessionStorage.getItem('adminAuth')==='1') {
 }
 
 async function init() {
-  setSyncStatus('syncing','NaÄÃ­tÃ¡m databÃ¡zi...');
+  setSyncStatus('syncing','Načítám databázi...');
   const ok = await ghLoad();
-  if (!ok) { setSyncStatus('err','â Chyba naÄÃ­tÃ¡nÃ­ â zkontrolujte token'); return; }
-  setSyncStatus('ok','â DatabÃ¡ze naÄtena');
+  if (!ok) { setSyncStatus('err','✗ Chyba načítání — zkontrolujte token'); return; }
+  setSyncStatus('ok','✓ Databáze načtena');
   setTimeout(()=>setSyncStatus('',''),2000);
   renderProducts();
 }
@@ -260,7 +256,7 @@ imageUploadArea.addEventListener('drop',e=>{e.preventDefault();imageUploadArea.c
 imageInput.addEventListener('change',()=>{if(imageInput.files[0])handleImg(imageInput.files[0])});
 
 function handleImg(file) {
-  if (file.size>5*1024*1024){showErr('ObrÃ¡zek je pÅÃ­liÅ¡ velkÃ½ (max 5 MB).');return;}
+  if (file.size>5*1024*1024){showErr('Obrázek je příliš velký (max 5 MB).');return;}
   const reader=new FileReader();
   reader.onload=e=>{
     currentImage=e.target.result;
@@ -279,42 +275,42 @@ imageRemoveBtn.addEventListener('click',e=>{
 
 // STATIC PRODUCTS
 var STATIC_PRODUCTS=[
-  {pid:0,name:'KanÄÃ­ klobÃ¡sa',price:'298 kÄ/kg'},
-  {pid:1,name:'VepÅovÃ¡ klobÃ¡sa',price:'245 kÄ/kg'},
-  {pid:2,name:'Å unkovÃ¡ klobÃ¡sa sÃ½r a zelenina',price:'295 kÄ/kg'},
-  {pid:3,name:'PaprikÃ¡Å¡ klobÃ¡s',price:'277 kÄ/kg'},
-  {pid:4,name:'Poctivka - Å¡unkovÃ¡ libovÃ¡ klobÃ¡sa',price:'277 kÄ/kg'},
-  {pid:5,name:'JelenÃ­ klobÃ¡sa',price:'298 kÄ/kg'},
-  {pid:6,name:'SeleÄÃ­ klobÃ¡sa',price:'277 kÄ/kg'},
-  {pid:7,name:'SkopovÃ¡ pasteveckÃ¡',price:'298 kÄ/kg'},
-  {pid:8,name:'PÃ¡reÄky se sÃ½rem',price:'277 kÄ/kg'},
-  {pid:9,name:'Kabanos',price:'192 kÄ/kg'},
-  {pid:10,name:'Å pekÃ¡Äky',price:'187 kÄ/kg'},
-  {pid:11,name:'TyrolskÃ¡ - JÃ³dlovaÄka',price:'245 kÄ/kg'},
-  {pid:12,name:'MinimaÄarky',price:'373 kÄ/kg'},
-  {pid:13,name:'KozÃ¡ckÃ¡ klobÃ¡sa',price:'373 kÄ/kg'},
-  {pid:14,name:'Lucifer Äabaj',price:'358 kÄ/kg'},
-  {pid:15,name:'GurmÃ¡n Äabaj',price:'358 kÄ/kg'},
-  {pid:16,name:'KoÅskÃ¡ Äabaj',price:'370 kÄ/kg'},
-  {pid:17,name:'GoliÃ¡Å¡ Äabaj',price:'358 kÄ/kg'},
-  {pid:18,name:'Å½itavskÃ¡ klobÃ¡sa',price:'358 kÄ/kg'},
-  {pid:19,name:'KanÄÃ­ salÃ¡m',price:'348 kÄ/kg'},
-  {pid:20,name:'LoveckÃ½ salÃ¡m',price:'295 kÄ/kg'},
-  {pid:21,name:'PEGAS - salÃ¡m uherskÃ©ho typu',price:'326 kÄ/kg'},
-  {pid:22,name:'VysoÄina',price:'266 kÄ/kg'},
-  {pid:23,name:'PekelnÃ½ salÃ¡m',price:'358 kÄ/kg'},
-  {pid:24,name:'SekanÃ¡ Afkos',price:'216 kÄ/kg'},
-  {pid:25,name:'JitrniÄky',price:'155 kÄ/kg'},
-  {pid:26,name:'JelÃ­tka',price:'155 kÄ/kg'},
-  {pid:27,name:'TlaÄenka',price:'185 kÄ/kg'},
-  {pid:28,name:'OravskÃ½ bok obalovanÃ½',price:'338 kÄ/kg'},
-  {pid:29,name:'UzenÃ½ bok',price:'378 kÄ/kg'},
-  {pid:30,name:'UzenÃ© maso ve skle',price:'186 kÄ/ks'},
-  {pid:31,name:'HrubÃ¡ paÅ¡tika',price:'54 kÄ/ks'},
-  {pid:32,name:'TrhanÃ© maso',price:'69 kÄ/ks'},
-  {pid:33,name:'JemnÃ¡ paÅ¡tika',price:'52 kÄ/ks'},
-  {pid:34,name:'Å kvarky v sÃ¡dle',price:'95 kÄ/kg'},
-  {pid:35,name:'UzenÃ¡ kÃ½ta, kotleta, krkovice',price:'378 kÄ/kg'},
+  {pid:0,name:'Kančí klobása',price:'298 kč/kg'},
+  {pid:1,name:'Vepřová klobása',price:'245 kč/kg'},
+  {pid:2,name:'Šunková klobása sýr a zelenina',price:'295 kč/kg'},
+  {pid:3,name:'Paprikáš klobás',price:'277 kč/kg'},
+  {pid:4,name:'Poctivka - šunková libová klobása',price:'277 kč/kg'},
+  {pid:5,name:'Jelení klobása',price:'298 kč/kg'},
+  {pid:6,name:'Selečí klobása',price:'277 kč/kg'},
+  {pid:7,name:'Skopová pastevecká',price:'298 kč/kg'},
+  {pid:8,name:'Párečky se sýrem',price:'277 kč/kg'},
+  {pid:9,name:'Kabanos',price:'192 kč/kg'},
+  {pid:10,name:'Špekáčky',price:'187 kč/kg'},
+  {pid:11,name:'Tyrolská - Jódlovačka',price:'245 kč/kg'},
+  {pid:12,name:'Minimaďarky',price:'373 kč/kg'},
+  {pid:13,name:'Kozácká klobása',price:'373 kč/kg'},
+  {pid:14,name:'Lucifer čabaj',price:'358 kč/kg'},
+  {pid:15,name:'Gurmán čabaj',price:'358 kč/kg'},
+  {pid:16,name:'Koňská čabaj',price:'370 kč/kg'},
+  {pid:17,name:'Goliáš čabaj',price:'358 kč/kg'},
+  {pid:18,name:'Žitavská klobása',price:'358 kč/kg'},
+  {pid:19,name:'Kančí salám',price:'348 kč/kg'},
+  {pid:20,name:'Lovecký salám',price:'295 kč/kg'},
+  {pid:21,name:'PEGAS - salám uherského typu',price:'326 kč/kg'},
+  {pid:22,name:'Vysočina',price:'266 kč/kg'},
+  {pid:23,name:'Pekelný salám',price:'358 kč/kg'},
+  {pid:24,name:'Sekaná Afkos',price:'216 kč/kg'},
+  {pid:25,name:'Jitrničky',price:'155 kč/kg'},
+  {pid:26,name:'Jelítka',price:'155 kč/kg'},
+  {pid:27,name:'Tlačenka',price:'185 kč/kg'},
+  {pid:28,name:'Oravský bok obalovaný',price:'338 kč/kg'},
+  {pid:29,name:'Uzený bok',price:'378 kč/kg'},
+  {pid:30,name:'Uzené maso ve skle',price:'186 kč/ks'},
+  {pid:31,name:'Hrubá paštika',price:'54 kč/ks'},
+  {pid:32,name:'Trhané maso',price:'69 kč/ks'},
+  {pid:33,name:'Jemná paštika',price:'52 kč/ks'},
+  {pid:34,name:'Škvarky v sádle',price:'95 kč/kg'},
+  {pid:35,name:'Uzená kýta, kotleta, krkovice',price:'378 kč/kg'},
 ];
 
 document.getElementById('adminProductList').addEventListener('click',async e=>{
@@ -325,22 +321,22 @@ document.getElementById('adminProductList').addEventListener('click',async e=>{
   if(action==='toggle-static'){
     const pid=parseInt(btn.dataset.pid);
     if(hiddenStatic.includes(pid))hiddenStatic.splice(hiddenStatic.indexOf(pid),1);else hiddenStatic.push(pid);
-    renderProducts();await ghSave('ZmÄna viditelnosti produktu');
+    renderProducts();await ghSave('Změna viditelnosti produktu');
   }else if(action==='delete-static'){
-    if(!confirm('Opravdu smazat?'))return;
+    if(!confirm('Opravdu smezat?'))return;
     const pid=parseInt(btn.dataset.pid);
     if(!deletedStatic.includes(pid))deletedStatic.push(pid);
-    renderProducts();await ghSave('SmazÃ¡nÃ­ produktu');
+    renderProducts();await ghSave('Smazání produktu');
   }else if(action==='toggle-custom'){
     const idx=parseInt(btn.dataset.idx);
     if(hiddenCustom.includes(idx))hiddenCustom.splice(hiddenCustom.indexOf(idx),1);else hiddenCustom.push(idx);
-    renderProducts();await ghSave('ZmÄna viditelnosti pÅidanÃ©ho produktu');
+    renderProducts();await ghSave('Změna viditelnosti přidaného produktu');
   }else if(action==='delete-custom'){
     if(!confirm('Opravdu smezat?'))return;
     const idx=parseInt(btn.dataset.idx);
     customProducts.splice(idx,1);
     hiddenCustom=hiddenCustom.filter(i=>i!==idx).map(i=>i>idx?i-1:i);
-    renderProducts();await ghSave('SmazÃ¡nÃ­ pÅidanÃ©ho produktu');
+    renderProducts();await ghSave('Smazání přidaného produktu');
   }
 });
 
@@ -348,7 +344,7 @@ document.getElementById('addProductBtn').addEventListener('click',async()=>{
   const name=document.getElementById('productName').value.trim();
   const price=document.getElementById('productPrice').value.trim();
   const note=document.getElementById('productNote').value.trim();
-  if(!name){showErr('Zadejte nÃ¡zev produktu.');return;}
+  if(!name){showErr('Zadejte název produktu.');return;}
   if(!price){showErr('Zadejte cenu produktu.');return;}
   customProducts.unshift({id:Date.now(),name,price,note,image:currentImage||null});
   renderProducts();
@@ -356,34 +352,34 @@ document.getElementById('addProductBtn').addEventListener('click',async()=>{
   document.getElementById('productPrice').value='';
   document.getElementById('productNote').value='';
   imageRemoveBtn.click();
-  const ok=await ghSave('PÅidÃ¡nÃ­ produktu: '+name);
-  if(ok)showOk('Produkt byl pÅidÃ¡n a uloÅ¾en do databÃ¡ze!');
+  const ok=await ghSave('Přidání produktu: '+name);
+  if(ok)showOk('Produkt byl přidán a uložen do databáze!');
 });
 
 function renderProducts(){
   const list=document.getElementById('adminProductList');
   const visS=STATIC_PRODUCTS.filter(p=>!deletedStatic.includes(p.pid)&&!hiddenStatic.includes(p.pid)).length;
   const visC=customProducts.filter((_,i)=>!hiddenCustom.includes(i)).length;
-  document.getElementById('productCount').textContent='('+( visS+visC)+' viditelnÃ½ch)';
+  document.getElementById('productCount').textContent='('+( visS+visC)+' viditelných)';
   let html='';
   const activeStatic=STATIC_PRODUCTS.filter(p=>!deletedStatic.includes(p.pid));
   if(activeStatic.length){
-    html+='<div class="admin-section-divider">PÅ¯vodnÃ­ produkty</div>';
+    html+='<div class="admin-section-divider">Původní produkty</div>';
     activeStatic.forEach(p=>{
       const h=hiddenStatic.includes(p.pid);
-      html+='<div class="admin-product-item'+(h?' is-hidden':'')+'"><div class="admin-product-info"><span class="admin-product-name">'+p.name+'</span><span class="admin-product-price">'+p.price+'</span></div><div class="admin-product-actions"><button class="abtn '+(h?'abtn-show':'abtn-hide')+'" data-action="toggle-static" data-pid="'+p.pid+'">'+(h?'Zobrazit':'SkrÃ½x')+'</button><button class="abtn abtn-del" data-action="delete-static" data-pid="'+p.pid+'">Smazat</button></div></div>';
+      html+='<div class="admin-product-item'+(h?' is-hidden':'')+'"><div class="admin-product-info"><span class="admin-product-name">'+p.name+'</span><span class="admin-product-price">'+p.price+'</span></div><div class="admin-product-actions"><button class="abtn '+(h?'abtn-show':'abtn-hide')+'" data-action="toggle-static" data-pid="'+p.pid+'">'+(h?'Zobrazit':'Skrýt')+'</button><button class="abtn abtn-del" data-action="delete-static" data-pid="'+p.pid+'">Smazat</button></div></div>';
     });
   }
   if(customProducts.length){
-    html+='<div class="admin-section-divider">PÅidanÃ© produkty</div>';
+    html+='<div class="admin-section-divider">Přidané produkty</div>';
     customProducts.forEach((p,i)=>{
       const h=hiddenCustom.includes(i);
       html+='<div class="admin-product-item'+(h?' is-hidden':'')+'">'+( p.image?'<img class="admin-product-img" src="'+p.image+'" alt="">':'')+
         '<div class="admin-product-info"><span class="admin-product-name">'+p.name+'</span><span class="admin-product-price">'+p.price+'</span>'+(p.note?'<span class="admin-product-note">'+p.note+'</span>':'')+
-        '</div><div class="admin-product-actions"><button class="abtn '+(h?'abtn-show':'abtn-hide')+'" data-action="toggle-custom" data-idx="'+i+'">'+(h?'Zobrazit':'SkrÃ½t')+'</button><button class="abtn abtn-del" data-action="delete-custom" data-idx="'+i+'">Smazat</button></div></div>';
+        '</div><div class="admin-product-actions"><button class="abtn '+(h?'abtn-show':'abtn-hide')+'" data-action="toggle-custom" data-idx="'+i+'">'+(h?'Zobrazit':'Skrýt')+'</button><button class="abtn abtn-del" data-action="delete-custom" data-idx="'+i+'">Smazat</button></div></div>';
     });
   }
-  list.innerHTML=html||'<div class="admin-empty">Å½Ã¡dnÃ© produkty.</div>';
+  list.innerHTML=html||'<div class="admin-empty">Žádné produkty.</div>';
 }
 
 function showErr(m){document.getElementById('formError').textContent=m;document.getElementById('formError').style.display='block';document.getElementById('formSuccess').style.display='none';}

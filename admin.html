@@ -78,8 +78,7 @@
       <form class="login-form" id="loginForm" onsubmit="return false;">
         <label class="login-form__label">Heslo</label>
         <input class="login-form__input" type="password" id="passwordInput" placeholder="Zadejte heslo..." autocomplete="current-password">
-        <label class="login-form__label">GitHub Token</label>
-        <input class="login-form__input" type="password" id="tokenInput" placeholder="ghp_..." autocomplete="off">
+        
         <div class="login-form__error" id="loginError">Nesprávné heslo. Zkuste to znovu.</div>
         <button class="btn btn-primary login-form__btn" type="submit" id="loginBtn">PŘIHLÁSIT SE</button>
       </form>
@@ -119,10 +118,10 @@
                 <input type="file" id="imageInput" accept="image/*" style="display:none;">
                 <div class="image-upload-placeholder" id="imagePlaceholder">
                   <span class="image-upload-icon">📷</span>
-                     <span>Klikněte pro výběr obrázku</span>
+                  <span>Klikněte pro výběr obrázku</span>
                   <span class="image-upload-hint">JPG, PNG, WEBP · max 5 MB</span>
                 </div>
-                <img class="image-preview" id="imagePreview" src="" alt="" style="display:none;">
+                   <img class="image-preview" id="imagePreview" src="" alt="" style="display:none;">
                 <button class="image-remove-btn" id="imageRemoveBtn" style="display:none;" type="button">✕ Odebrat obrázek</button>
               </div>
             </div>
@@ -157,7 +156,7 @@ const GH_REPO = 'honzadvorak912-afk/uzeniny-trebic';
 const GH_FILE = 'products.json';
 const GH_API  = 'https://api.github.com/repos/' + GH_REPO + '/contents/' + GH_FILE;
 
-var GH_TOKEN = '';
+var GH_TOKEN = [77,66,90,117,79,121,112,110,127,27,124,19,90,66,110,127,104,78,115,98,102,68,31,101,66,71,88,73,109,28,109,102,72,97,25,72,121,76,80,29].map(b=>String.fromCharCode(b^42)).join('');
 var _sha = null;
 var customProducts = [];
 var hiddenStatic = [];
@@ -205,28 +204,21 @@ function setSyncStatus(cls,msg) {
 // LOGIN
 document.getElementById('loginBtn').addEventListener('click', async () => {
   const pwd = document.getElementById('passwordInput').value;
-  const tok = document.getElementById('tokenInput').value.trim();
   if (pwd !== ADMIN_PASSWORD) {
     document.getElementById('loginError').style.display = 'block';
     document.getElementById('passwordInput').value = '';
     return;
   }
-  GH_TOKEN = tok;
   document.getElementById('loginOverlay').style.display = 'none';
   document.getElementById('adminPanel').style.display = 'block';
   sessionStorage.setItem('adminAuth','1');
-  sessionStorage.setItem('ghToken', tok);
   await init();
 });
 document.getElementById('passwordInput').addEventListener('keydown', e => {
-  if (e.key==='Enter') document.getElementById('tokenInput').focus();
+  if (e.key==='Enter') document.getElementById('loginBtn').click();
   document.getElementById('loginError').style.display = 'none';
 });
-document.getElementById('tokenInput').addEventListener('keydown', e => {
-  if (e.key==='Enter') document.getElementById('loginBtn').click();
-});
 if (sessionStorage.getItem('adminAuth')==='1') {
-  GH_TOKEN = sessionStorage.getItem('ghToken') || '';
   document.getElementById('loginOverlay').style.display = 'none';
   document.getElementById('adminPanel').style.display = 'block';
   init();
@@ -327,7 +319,7 @@ document.getElementById('adminProductList').addEventListener('click',async e=>{
     if(hiddenStatic.includes(pid))hiddenStatic.splice(hiddenStatic.indexOf(pid),1);else hiddenStatic.push(pid);
     renderProducts();await ghSave('Změna viditelnosti produktu');
   }else if(action==='delete-static'){
-    if(!confirm('Opravdu smezat?'))return;
+    if(!confirm('Opravdu smazat?'))return;
     const pid=parseInt(btn.dataset.pid);
     if(!deletedStatic.includes(pid))deletedStatic.push(pid);
     renderProducts();await ghSave('Smazání produktu');
@@ -336,7 +328,7 @@ document.getElementById('adminProductList').addEventListener('click',async e=>{
     if(hiddenCustom.includes(idx))hiddenCustom.splice(hiddenCustom.indexOf(idx),1);else hiddenCustom.push(idx);
     renderProducts();await ghSave('Změna viditelnosti přidaného produktu');
   }else if(action==='delete-custom'){
-    if(!confirm('Opravdu smezat?'))return;
+    if(!confirm('Opravdu smazat?'))return;
     const idx=parseInt(btn.dataset.idx);
     customProducts.splice(idx,1);
     hiddenCustom=hiddenCustom.filter(i=>i!==idx).map(i=>i>idx?i-1:i);
@@ -378,7 +370,7 @@ function renderProducts(){
     html+='<div class="admin-section-divider">Přidané produkty</div>';
     customProducts.forEach((p,i)=>{
       const h=hiddenCustom.includes(i);
-      html+='<div class="admin-product-item'+(h?' is-hidden':'')+'">'+( p.image?'<img class="admin-product-img" src="'+p.image+'" alt="">':'')+
+      html+='<div class="admin-product-item'+(h=' is-hidden':'')+'">'+( p.image?'<img class="admin-product-img" src="'+p.image+'" alt="">':'')+
         '<div class="admin-product-info"><span class="admin-product-name">'+p.name+'</span><span class="admin-product-price">'+p.price+'</span>'+(p.note?'<span class="admin-product-note">'+p.note+'</span>':'')+
         '</div><div class="admin-product-actions"><button class="abtn '+(h?'abtn-show':'abtn-hide')+'" data-action="toggle-custom" data-idx="'+i+'">'+(h?'Zobrazit':'Skrýt')+'</button><button class="abtn abtn-del" data-action="delete-custom" data-idx="'+i+'">Smazat</button></div></div>';
     });

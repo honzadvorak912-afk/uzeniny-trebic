@@ -421,3 +421,40 @@
 .admin-toggle-btn:hover { background: rgba(255,255,255,.08); color: var(--text); border-color: rgba(255,255,255,.4); }
 .admin-product-item--hidden .admin-product-name { opacity: .35; text-decoration: line-through; }
 .admin-product-item--hidden .admin-toggle-btn { border-color: var(--accent); color: var(--accent); }
+
+
+/* ---- OPRAVA: product item akce ---- */
+.admin-product-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .65rem .8rem;
+  border: 1px solid var(--border);
+  background: var(--bg-section1);
+  margin-bottom: .4rem;
+  transition: border-color .2s;
+}
+.admin-product-item:hover { border-color: var(--accent); }
+.admin-product-card--hidden { opacity: .4; }
+.admin-product-name { font-size: .9rem; color: var(--text-light); }
+.admin-product-price { font-size: .78rem; color: var(--accent); margin-top: .1rem; }
+.admin-product-note { font-size: .7rem; color: var(--text-muted); font-style: italic; }
+.admin-toggle-btn {
+  flex-shrink: 0;
+  padding: .28rem .85rem;
+  font-size: .72rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  border: 1px solid rgba(201,168,76,.4);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background .2s, color .2s, border-color .2s;
+  font-family: "Jost", sans-serif;
+}
+.admin-toggle-btn:hover {
+  background: rgba(201,168,76,.1);
+  color: var(--accent);
+  border-color: var(--accent);
+}

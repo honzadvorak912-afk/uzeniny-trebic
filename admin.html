@@ -10,15 +10,16 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="admin.css">
   <style>
-.abtn{font-family:'Jost',sans-serif;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;padding:.32rem .8rem;cursor:pointer;border:1px solid;background:transparent;transition:background .18s,color .18s;white-space:nowrap}
-.abtn-hide{border-color:rgba(201,168,76,.35);color:#a89880}
-.abtn-hide:hover{border-color:#c9a84c;color:#c9a84c}
-.abtn-show{border-color:#c9a84c;color:#c9a84c}
-.abtn-show:hover{background:#c9a84c;color:#0e0c09}
-.abtn-del{border-color:#c0392b;color:#c0392b}
-.abtn-del:hover{background:#c0392b;color:#fff}
-.admin-product-actions{display:flex;gap:.4rem;flex-shrink:0}
-.admin-product-item.is-hidden{opacity:.38}
+    .abtn{font-family:"Jost",sans-serif;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;padding:.32rem .8rem;cursor:pointer;border:1px solid;background:transparent;transition:background .18s,color .18s;white-space:nowrap}
+    .abtn-hide{border-color:rgba(201,168,76,.35);color:#a89880}.abtn-hide:hover{border-color:#c9a84c;color:#c9a84c}
+    .abtn-show{border-color:#c9a84c;color:#c9a84c}.abtn-show:hover{background:#c9a84c;color:#0e0c09}
+    .abtn-del{border-color:#c0392b;color:#c0392b}.abtn-del:hover{background:#c0392b;color:#fff}
+    .admin-product-actions{display:flex;gap:.4rem;flex-shrink:0}
+    .admin-product-item.is-hidden{opacity:.38}
+    .sync-status{font-size:.75rem;padding:.4rem .8rem;margin-bottom:1rem;display:none}
+    .sync-status.ok{color:#4caf50;background:rgba(76,175,80,.1);border-left:3px solid #4caf50;display:block}
+    .sync-status.err{color:#c0392b;background:rgba(192,57,43,.1);border-left:3px solid #c0392b;display:block}
+    .sync-status.loading{color:#c9a84c;background:rgba(201,168,76,.1);border-left:3px solid #c9a84c;display:block}
   </style>
 </head>
 <body>
@@ -50,6 +51,7 @@
       <div class="admin-grid">
         <div class="admin-form-section">
           <h2 class="admin-section-title">Přidat nový produkt</h2>
+          <div class="sync-status" id="syncStatus"></div>
           <form class="admin-form" id="addProductForm">
             <div class="form-group">
               <label class="form-label">Název produktu *</label>
@@ -71,7 +73,7 @@
         <div class="admin-list-section">
           <h2 class="admin-section-title">Všechny produkty <span class="admin-count" id="productCount"></span></h2>
           <p class="admin-list-hint">Skrýt/Zobrazit = viditelnost na webu · Smazat = trvalé odebrání</p>
-          <div class="admin-product-list" id="adminProductList"><div class="admin-empty">Načítání...</div></div>
+          <div class="admin-product-list" id="adminProductList"><div class="admin-empty">Načítám z databáze...</div></div>
           <a href="index.html" class="btn btn-outline" style="margin-top:1rem;display:inline-block;">← ZPĚT NA WEB</a>
         </div>
       </div>
@@ -84,108 +86,147 @@
 
   <script>
     var ADMIN_PASSWORD = "uzeniny2024";
+    var GH_TOKEN = "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";
+    var GH_REPO = "honzadvorak912-afk/uzeniny-trebic";
+    var GH_FILE = "products.json";
+    var GH_API = "https://api.github.com/repos/" + GH_REPO + "/contents/" + GH_FILE;
+
     var loginOverlay = document.getElementById("loginOverlay");
     var adminPanel = document.getElementById("adminPanel");
     var loginError = document.getElementById("loginError");
     var passwordInput = document.getElementById("passwordInput");
+    var syncStatus = document.getElementById("syncStatus");
 
     document.getElementById("loginBtn").addEventListener("click", function() {
       if (passwordInput.value === ADMIN_PASSWORD) {
         loginOverlay.style.display = "none";
         adminPanel.style.display = "block";
         sessionStorage.setItem("adminAuth", "1");
+        loadFromGitHub();
       } else {
         loginError.style.display = "block";
         passwordInput.value = "";
         passwordInput.focus();
       }
     });
-
     passwordInput.addEventListener("keydown", function(e) {
       if (e.key === "Enter") document.getElementById("loginBtn").click();
       loginError.style.display = "none";
     });
-
     if (sessionStorage.getItem("adminAuth") === "1") {
       loginOverlay.style.display = "none";
       adminPanel.style.display = "block";
+      loadFromGitHub();
     }
-
     window.addEventListener("scroll", function() {
       document.getElementById("navbar").classList.toggle("scrolled", window.scrollY > 60);
     });
 
-    var STATIC_PRODUCTS = [
-      {pid:0,  name:"Kanci klobasa",                    price:"298 kc/kg"},
-      {pid:1,  name:"Veprova klobasa",                  price:"245 kc/kg"},
-      {pid:2,  name:"Sunkova klobasa syr a zelenina",   price:"295 kc/kg"},
-      {pid:3,  name:"Paprikas klobas",                  price:"277 kc/kg"},
-      {pid:4,  name:"Poctivka - sunkova libova klobasa",price:"277 kc/kg"},
-      {pid:5,  name:"Jeleni klobasa",                   price:"298 kc/kg"},
-      {pid:6,  name:"Seleci klobasa",                   price:"277 kc/kg"},
-      {pid:7,  name:"Skopova pastevecka",               price:"298 kc/kg"},
-      {pid:8,  name:"Parecky se syrem",                 price:"277 kc/kg"},
-      {pid:9,  name:"Kabanos",                          price:"192 kc/kg"},
-      {pid:10, name:"Spekacky",                         price:"187 kc/kg"},
-      {pid:11, name:"Tyrolska - Jodlovacka",            price:"245 kc/kg"},
-      {pid:12, name:"Minimadarky",                      price:"373 kc/kg"},
-      {pid:13, name:"Kozacka klobasa",                  price:"373 kc/kg"},
-      {pid:14, name:"Lucifer cabaj",                    price:"358 kc/kg"},
-      {pid:15, name:"Gurman cabaj",                     price:"358 kc/kg"},
-      {pid:16, name:"Konska cabaj",                     price:"370 kc/kg"},
-      {pid:17, name:"Golias cabaj",                     price:"358 kc/kg"},
-      {pid:18, name:"Zitavska klobasa",                 price:"358 kc/kg"},
-      {pid:19, name:"Kanci salam",                      price:"348 kc/kg"},
-      {pid:20, name:"Lovecky salam",                    price:"295 kc/kg"},
-      {pid:21, name:"PEGAS - salam uherskeho typu",     price:"326 kc/kg"},
-      {pid:22, name:"Vysocina",                         price:"266 kc/kg"},
-      {pid:23, name:"Pekelny salam",                    price:"358 kc/kg"},
-      {pid:24, name:"Sekana Afkos",                     price:"216 kc/kg"},
-      {pid:25, name:"Jitrnicky",                        price:"155 kc/kg"},
-      {pid:26, name:"Jelitka",                          price:"155 kc/kg"},
-      {pid:27, name:"Tlacenka",                         price:"185 kc/kg"},
-      {pid:28, name:"Oravsky bok obalovany",            price:"338 kc/kg"},
-      {pid:29, name:"Uzeny bok",                        price:"378 kc/kg"},
-      {pid:30, name:"Uzene maso ve skle",               price:"186 kc/ks"},
-      {pid:31, name:"Hruba pastika",                    price:"54 kc/ks"},
-      {pid:32, name:"Trhane maso",                      price:"69 kc/ks"},
-      {pid:33, name:"Jemna pastika",                    price:"52 kc/ks"},
-      {pid:34, name:"Skvarky v sadle",                  price:"95 kc/kg"},
-      {pid:35, name:"Uzena kyta, kotleta, krkovice",    price:"378 kc/kg"}
-    ];
+    var DB = { adminProducts: [], hiddenProducts: [], deletedStaticProducts: [], hiddenCustomProducts: [] };
+    var GH_SHA = null;
 
-    var products = JSON.parse(localStorage.getItem("adminProducts") || "[]");
-    renderProducts();
+    function showSync(msg, type) {
+      syncStatus.textContent = msg;
+      syncStatus.className = "sync-status " + type;
+    }
+
+    function loadFromGitHub() {
+      showSync("Načítám z GitHubu...", "loading");
+      fetch(GH_API, { headers: { "Authorization": "token " + GH_TOKEN, "Accept": "application/vnd.github.v3+json" } })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          GH_SHA = data.sha;
+          var content = atob(data.content.replace(/\n/g, ""));
+          DB = JSON.parse(content);
+          if (!DB.adminProducts) DB.adminProducts = [];
+          if (!DB.hiddenProducts) DB.hiddenProducts = [];
+          if (!DB.deletedStaticProducts) DB.deletedStaticProducts = [];
+          if (!DB.hiddenCustomProducts) DB.hiddenCustomProducts = [];
+          showSync("Databáze načtena", "ok");
+          renderProducts();
+          setTimeout(function() { syncStatus.style.display = "none"; }, 2000);
+        })
+        .catch(function(e) { showSync("Chyba načítání: " + e.message, "err"); });
+    }
+
+    function saveToGitHub(callback) {
+      showSync("Ukládám...", "loading");
+      var content = btoa(unescape(encodeURIComponent(JSON.stringify(DB, null, 2))));
+      var body = JSON.stringify({ message: "Admin: update products.json", content: content, sha: GH_SHA });
+      fetch(GH_API, { method: "PUT", headers: { "Authorization": "token " + GH_TOKEN, "Accept": "application/vnd.github.v3+json", "Content-Type": "application/json" }, body: body })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          GH_SHA = data.content.sha;
+          showSync("Uloženo!", "ok");
+          setTimeout(function() { syncStatus.style.display = "none"; }, 2000);
+          if (callback) callback();
+        })
+        .catch(function(e) { showSync("Chyba ukládání: " + e.message, "err"); });
+    }
+
+    var STATIC_PRODUCTS = [
+      {pid:0,  name:"Kančí klobása",                    price:"298 kč/kg"},
+      {pid:1,  name:"Vepřová klobása",                  price:"245 kč/kg"},
+      {pid:2,  name:"Šunková klobása sýr a zelenina",   price:"295 kč/kg"},
+      {pid:3,  name:"Paprikáš klobás",                  price:"277 kč/kg"},
+      {pid:4,  name:"Poctivka - šunková libová klobása",price:"277 kč/kg"},
+      {pid:5,  name:"Jelení klobása",                   price:"298 kč/kg"},
+      {pid:6,  name:"Selečí klobása",                   price:"277 kč/kg"},
+      {pid:7,  name:"Skopová pastevecká",               price:"298 kč/kg"},
+      {pid:8,  name:"Párečky se sýrem",                 price:"277 kč/kg"},
+      {pid:9,  name:"Kabanos",                          price:"192 kč/kg"},
+      {pid:10, name:"Špekáčky",                         price:"187 kč/kg"},
+      {pid:11, name:"Tyrolská - Jódlovačka",            price:"245 kč/kg"},
+      {pid:12, name:"Minimaďarky",                      price:"373 kč/kg"},
+      {pid:13, name:"Kozácká klobása",                  price:"373 kč/kg"},
+      {pid:14, name:"Lucifer čabaj",                    price:"358 kč/kg"},
+      {pid:15, name:"Gurmán čabaj",                     price:"358 kč/kg"},
+      {pid:16, name:"Koňská čabaj",                     price:"370 kč/kg"},
+      {pid:17, name:"Goliáš čabaj",                     price:"358 kč/kg"},
+      {pid:18, name:"Žitavská klobása",                 price:"358 kč/kg"},
+      {pid:19, name:"Kančí salám",                      price:"348 kč/kg"},
+      {pid:20, name:"Lovecký salám",                    price:"295 kč/kg"},
+      {pid:21, name:"PEGAS - salám uherského typu",     price:"326 kč/kg"},
+      {pid:22, name:"Vysočina",                         price:"266 kč/kg"},
+      {pid:23, name:"Pekelný salám",                    price:"358 kč/kg"},
+      {pid:24, name:"Sekaná Afkos",                     price:"216 kč/kg"},
+      {pid:25, name:"Jitrničky",                        price:"155 kč/kg"},
+      {pid:26, name:"Jelítka",                          price:"155 kč/kg"},
+      {pid:27, name:"Tlačenka",                         price:"185 kč/kg"},
+      {pid:28, name:"Oravský bok obalovaný",            price:"338 kč/kg"},
+      {pid:29, name:"Uzený bok",                        price:"378 kč/kg"},
+      {pid:30, name:"Uzené maso ve skle",               price:"186 kč/ks"},
+      {pid:31, name:"Hrubá paštika",                    price:"54 kč/ks"},
+      {pid:32, name:"Trhané maso",                      price:"69 kč/ks"},
+      {pid:33, name:"Jemná paštika",                    price:"52 kč/ks"},
+      {pid:34, name:"Škvarky v sádle",                  price:"95 kč/kg"},
+      {pid:35, name:"Uzená kýta, kotleta, krkovice",    price:"378 kč/kg"}
+    ];
 
     document.getElementById("adminProductList").addEventListener("click", function(e) {
       var btn = e.target.closest("[data-action]");
       if (!btn) return;
-      e.stopPropagation();
       var action = btn.dataset.action;
       if (action === "toggle-static") {
         var pid = parseInt(btn.dataset.pid);
-        var h = JSON.parse(localStorage.getItem("hiddenProducts") || "[]");
+        var h = DB.hiddenProducts;
         if (h.indexOf(pid) >= 0) { h.splice(h.indexOf(pid), 1); } else { h.push(pid); }
-        localStorage.setItem("hiddenProducts", JSON.stringify(h));
-        renderProducts();
+        renderProducts(); saveToGitHub();
       } else if (action === "delete-static") {
-        if (!confirm("Opravdu chcete trvale smazat tento produkt?")) return;
-        var pid = parseInt(btn.dataset.pid);
-        var d = JSON.parse(localStorage.getItem("deletedStaticProducts") || "[]");
-        d.push(pid); localStorage.setItem("deletedStaticProducts", JSON.stringify(d));
-        renderProducts();
+        if (!confirm("Opravdu smazat?")) return;
+        var pid2 = parseInt(btn.dataset.pid);
+        DB.deletedStaticProducts.push(pid2);
+        renderProducts(); saveToGitHub();
       } else if (action === "toggle-custom") {
         var idx = parseInt(btn.dataset.idx);
-        var h = JSON.parse(localStorage.getItem("hiddenCustomProducts") || "[]");
-        if (h.indexOf(idx) >= 0) { h.splice(h.indexOf(idx), 1); } else { h.push(idx); }
-        localStorage.setItem("hiddenCustomProducts", JSON.stringify(h));
-        renderProducts();
+        var hc = DB.hiddenCustomProducts;
+        if (hc.indexOf(idx) >= 0) { hc.splice(hc.indexOf(idx), 1); } else { hc.push(idx); }
+        renderProducts(); saveToGitHub();
       } else if (action === "delete-custom") {
-        if (!confirm("Opravdu chcete trvale smazat tento produkt?")) return;
-        var idx = parseInt(btn.dataset.idx);
-        products.splice(idx, 1);
-        localStorage.setItem("adminProducts", JSON.stringify(products));
-        renderProducts();
+        if (!confirm("Opravdu smazat?")) return;
+        var idx2 = parseInt(btn.dataset.idx);
+        DB.adminProducts.splice(idx2, 1);
+        renderProducts(); saveToGitHub();
       }
     });
 
@@ -193,58 +234,53 @@
       var name  = document.getElementById("productName").value.trim();
       var price = document.getElementById("productPrice").value.trim();
       var note  = document.getElementById("productNote").value.trim();
-      if (!name)  { showFormError("Zadejte nazev produktu."); return; }
-      if (!price) { showFormError("Zadejte cenu produktu.");  return; }
-      products.unshift({ id: Date.now(), name: name, price: price, note: note });
-      localStorage.setItem("adminProducts", JSON.stringify(products));
+      if (!name)  { showFormError("Zadejte název produktu."); return; }
+      if (!price) { showFormError("Zadejte cenu produktu."); return; }
+      DB.adminProducts.unshift({ id: Date.now(), name: name, price: price, note: note });
       renderProducts();
-      document.getElementById("productName").value  = "";
+      document.getElementById("productName").value = "";
       document.getElementById("productPrice").value = "";
-      document.getElementById("productNote").value  = "";
-      showFormSuccess("Produkt byl uspesne pridan!");
+      document.getElementById("productNote").value = "";
+      saveToGitHub(function() { showFormSuccess("Produkt přidán!"); });
     });
 
     function renderProducts() {
       var list = document.getElementById("adminProductList");
       var count = document.getElementById("productCount");
-      var hiddenStat = JSON.parse(localStorage.getItem("hiddenProducts") || "[]");
-      var hiddenCust = JSON.parse(localStorage.getItem("hiddenCustomProducts") || "[]");
-      var deletedStat = JSON.parse(localStorage.getItem("deletedStaticProducts") || "[]");
-      var visStatic = STATIC_PRODUCTS.filter(function(p) { return !deletedStat.includes(p.pid) && !hiddenStat.includes(p.pid); }).length;
-      var visCust = products.filter(function(p,i) { return !hiddenCust.includes(i); }).length;
-      count.textContent = "(" + (visStatic + visCust) + " viditelnych)";
+      var hiddenStat = DB.hiddenProducts;
+      var hiddenCust = DB.hiddenCustomProducts;
+      var deletedStat = DB.deletedStaticProducts;
+      var visStatic = STATIC_PRODUCTS.filter(function(p) { return deletedStat.indexOf(p.pid)<0 && hiddenStat.indexOf(p.pid)<0; }).length;
+      var visCust = DB.adminProducts.filter(function(p,i) { return hiddenCust.indexOf(i)<0; }).length;
+      count.textContent = "(" + (visStatic + visCust) + " viditelných)";
       var html = "";
-      var activeStatic = STATIC_PRODUCTS.filter(function(p) { return !deletedStat.includes(p.pid); });
+      var activeStatic = STATIC_PRODUCTS.filter(function(p) { return deletedStat.indexOf(p.pid)<0; });
       if (activeStatic.length > 0) {
-        html += "<div class=\"admin-section-divider\">Puvodni produkty</div>";
+        html += "<div class=\"admin-section-divider\">Původní produkty</div>";
         activeStatic.forEach(function(p) {
-          var hidden = hiddenStat.includes(p.pid);
+          var hidden = hiddenStat.indexOf(p.pid) >= 0;
           html += "<div class=\"admin-product-item" + (hidden ? " is-hidden" : "") + "\">";
-          html += "<div class=\"admin-product-info\">";
-          html += "<span class=\"admin-product-name\">" + p.name + "</span>";
-          html += "<span class=\"admin-product-price\">" + p.price + "</span></div>";
+          html += "<div class=\"admin-product-info\"><span class=\"admin-product-name\">" + p.name + "</span><span class=\"admin-product-price\">" + p.price + "</span></div>";
           html += "<div class=\"admin-product-actions\">";
-          html += "<button class=\"abtn " + (hidden ? "abtn-show" : "abtn-hide") + "\" data-action=\"toggle-static\" data-pid=\"" + p.pid + "\">" + (hidden ? "Zobrazit" : "Skryt") + "</button>";
+          html += "<button class=\"abtn " + (hidden ? "abtn-show" : "abtn-hide") + "\" data-action=\"toggle-static\" data-pid=\"" + p.pid + "\">" + (hidden ? "Zobrazit" : "Skrýt") + "</button>";
           html += "<button class=\"abtn abtn-del\" data-action=\"delete-static\" data-pid=\"" + p.pid + "\">Smazat</button>";
           html += "</div></div>";
         });
       }
-      if (products.length > 0) {
-        html += "<div class=\"admin-section-divider\">Pridane produkty</div>";
-        products.forEach(function(p, i) {
-          var hidden = hiddenCust.includes(i);
+      if (DB.adminProducts.length > 0) {
+        html += "<div class=\"admin-section-divider\">Přidané produkty</div>";
+        DB.adminProducts.forEach(function(p, i) {
+          var hidden = hiddenCust.indexOf(i) >= 0;
           html += "<div class=\"admin-product-item" + (hidden ? " is-hidden" : "") + "\">";
-          html += "<div class=\"admin-product-info\">";
-          html += "<span class=\"admin-product-name\">" + p.name + "</span>";
-          html += "<span class=\"admin-product-price\">" + p.price + "</span>";
+          html += "<div class=\"admin-product-info\"><span class=\"admin-product-name\">" + p.name + "</span><span class=\"admin-product-price\">" + p.price + "</span>";
           if (p.note) html += "<span class=\"admin-product-note\">" + p.note + "</span>";
           html += "</div><div class=\"admin-product-actions\">";
-          html += "<button class=\"abtn " + (hidden ? "abtn-show" : "abtn-hide") + "\" data-action=\"toggle-custom\" data-idx=\"" + i + "\">" + (hidden ? "Zobrazit" : "Skryt") + "</button>";
+          html += "<button class=\"abtn " + (hidden ? "abtn-show" : "abtn-hide") + "\" data-action=\"toggle-custom\" data-idx=\"" + i + "\">" + (hidden ? "Zobrazit" : "Skrýt") + "</button>";
           html += "<button class=\"abtn abtn-del\" data-action=\"delete-custom\" data-idx=\"" + i + "\">Smazat</button>";
           html += "</div></div>";
         });
       }
-      list.innerHTML = html || "<div class=\"admin-empty\">Zadne produkty.</div>";
+      list.innerHTML = html || "<div class=\"admin-empty\">Žádné přidané produkty.</div>";
     }
 
     function showFormError(msg) {

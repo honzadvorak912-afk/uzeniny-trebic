@@ -492,3 +492,8 @@ footer {
 .mobile-nav:not(.open) .mobile-nav__close {
   display: none;
 }
+
+/* Oprava: mobile-nav překryje navbar (hamburger) */
+.mobile-nav {
+  z-index: 1001;
+}

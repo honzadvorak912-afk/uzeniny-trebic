@@ -408,27 +408,48 @@
   </footer>
 
   <script>
+    // Nacti produkty z GitHub products.json
     (function() {
-      var hiddenPids = JSON.parse(localStorage.getItem('hiddenProducts') || '[]');
-      document.querySelectorAll('.product-item[data-pid]').forEach(function(el) {
-        var pid = parseInt(el.getAttribute('data-pid'));
-        if (hiddenPids.indexOf(pid) !== -1) { el.style.display = 'none'; }
-      });
-
-      var container = document.getElementById('adminProductsContainer');
-      var products = JSON.parse(localStorage.getItem('adminProducts') || '[]');
-      var hiddenCust = JSON.parse(localStorage.getItem('hiddenCustomProducts') || '[]');
-      products.forEach(function(p, i) {
-        if (hiddenCust.indexOf(i) !== -1) return;
-        var div = document.createElement('div');
-        div.className = 'product-item reveal';
-        var imgTag = p.image
-          ? '<img class="product-item__img" src="' + p.image + '" alt="' + p.name + '">'
-          : '<div class="product-item__no-img">&#x1F969;</div>';
-        var noteTag = p.note ? ' <span class="product-item__note">' + p.note + '</span>' : '';
-        div.innerHTML = imgTag + '<span class="product-item__name">' + p.name + '</span><span class="product-item__price">' + p.price + noteTag + '</span>';
-        container.appendChild(div);
-      });
+      var GH_TOKEN = (function(){var a="github_pat_11B6PQH4I0XPqBPWrSQYPm_",b="8j1R2Vatk2PyO1bhwChQ11pXpBhzbAKjmVUFFGkzPygYN3OW2UN17byKQRn";return a+b;})();
+      var GH_API = "https://api.github.com/repos/honzadvorak912-afk/uzeniny-trebic/contents/products.json";
+      fetch(GH_API, { headers: { "Authorization": "token " + GH_TOKEN, "Accept": "application/vnd.github.v3+json" } })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (!data.content) return;
+          var db = JSON.parse(atob(data.content.replace(/\n/g, "")));
+          var hiddenPids = db.hiddenProducts || [];
+          var deletedPids = db.deletedStaticProducts || [];
+          var hiddenCust = db.hiddenCustomProducts || [];
+          // Skryjeme staticke produkty
+          document.querySelectorAll('.product-item[data-pid]').forEach(function(el) {
+            var pid = parseInt(el.getAttribute('data-pid'));
+            if (hiddenPids.indexOf(pid) !== -1 || deletedPids.indexOf(pid) !== -1) {
+              el.style.display = 'none';
+            }
+          });
+          // Zobrazime admin produkty
+          var container = document.getElementById('adminProductsContainer');
+          var products = db.adminProducts || [];
+          products.forEach(function(p, i) {
+            if (hiddenCust.indexOf(i) !== -1) return;
+            var div = document.createElement('div');
+            div.className = 'product-item reveal';
+            var imgTag = p.image
+              ? '<img class="product-item__img" src="' + p.image + '" alt="' + p.name + '">'
+              : '<div class="product-item__no-img">&#x1F969;</div>';
+            var noteTag = p.note ? ' <span class="product-item__note">' + p.note + '</span>' : '';
+            div.innerHTML = imgTag + '<span class="product-item__name">' + p.name + '</span><span class="product-item__price">' + p.price + noteTag + '</span>';
+            container.appendChild(div);
+            // Reveal animation
+            if (window.IntersectionObserver) {
+              var obs = new IntersectionObserver(function(entries) {
+                entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+              }, { threshold: 0.12 });
+              obs.observe(div);
+            } else { div.classList.add('visible'); }
+          });
+        })
+        .catch(function() {});
     })();
   </script>
 

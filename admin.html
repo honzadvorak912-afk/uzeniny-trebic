@@ -176,15 +176,18 @@
 
     function saveToGitHub(callback) {
       showSync("Ukládám...", "loading");
-      function doSave(sha) {
-        var jsonStr = JSON.stringify(DB, null, 2);
-        var bytes = new TextEncoder().encode(jsonStr);
-        var binary = Array.from(bytes).map(function(b){return String.fromCharCode(b);}).join('');
-        var content = btoa(binary);
-        fetch(GH_API, {
-          method: "PUT",
-          headers: { "Authorization": "token " + GH_TOKEN, "Accept": "application/vnd.github.v3+json", "Content-Type": "application/json" },
-          body: JSON.stringify({ message: "Admin: update products.json", content: content, sha: sha })
+      // Vždy načti aktuální SHA před uložením
+      fetch(GH_API, { headers: { "Authorization": "token " + GH_TOKEN, "Accept": "application/vnd.github.v3+json" } })
+        .then(function(r) { return r.json(); })
+        .then(function(meta) {
+          var currentSha = meta.sha;
+          var jsonStr = JSON.stringify(DB, null, 2);
+          var encoded = btoa(Array.from(new TextEncoder().encode(jsonStr)).map(function(b){return String.fromCharCode(b);}).join(''));
+          return fetch(GH_API, {
+            method: "PUT",
+            headers: { "Authorization": "token " + GH_TOKEN, "Accept": "application/vnd.github.v3+json", "Content-Type": "application/json" },
+            body: JSON.stringify({ message: "Admin: update products.json", content: encoded, sha: currentSha })
+          });
         })
         .then(function(r) { return r.json(); })
         .then(function(data) {
@@ -193,22 +196,11 @@
             showSync("Uloženo!", "ok");
             setTimeout(function() { syncStatus.style.display = "none"; }, 2000);
             if (callback) callback();
-          } else if (data.message && data.message.indexOf("409") >= 0 || data.status === "409") {
-            // SHA conflict — obnov SHA a zkus znovu
-            fetch(GH_API, { headers: { "Authorization": "token " + GH_TOKEN } })
-              .then(function(r) { return r.json(); })
-              .then(function(d) { GH_SHA = d.sha; doSave(d.sha); });
           } else {
-            showSync("Chyba: " + (data.message || JSON.stringify(data)), "err");
+            showSync("Chyba uložení: " + (data.message || "neznámá"), "err");
           }
         })
         .catch(function(e) { showSync("Chyba: " + e.message, "err"); });
-      }
-      // Vždy načti aktuální SHA před uložením
-      fetch(GH_API, { headers: { "Authorization": "token " + GH_TOKEN, "Accept": "application/vnd.github.v3+json" } })
-        .then(function(r) { return r.json(); })
-        .then(function(d) { GH_SHA = d.sha; doSave(d.sha); })
-        .catch(function(e) { showSync("Chyba SHA: " + e.message, "err"); });
     }
 
     var STATIC_PRODUCTS = [

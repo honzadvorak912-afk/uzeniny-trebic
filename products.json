@@ -1,6 +1,13 @@
 {
   "adminProducts": [
     {
+      "id": 1780736014391,
+      "name": "Test2",
+      "price": "200 kc/kg",
+      "note": "",
+      "image": null
+    },
+    {
       "id": 1780735984931,
       "name": "TestProdukt",
       "price": "100 kč/kg",

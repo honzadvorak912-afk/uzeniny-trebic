@@ -174,7 +174,10 @@
 
     function saveToGitHub(callback) {
       showSync("Ukládám...", "loading");
-      var content = btoa(unescape(encodeURIComponent(JSON.stringify(DB, null, 2))));
+      var jsonStr = JSON.stringify(DB, null, 2);
+      var bytes = new TextEncoder().encode(jsonStr);
+      var binary = Array.from(bytes).map(function(b){return String.fromCharCode(b);}).join('');
+      var content = btoa(binary);
       var body = JSON.stringify({ message: "Admin: update products.json", content: content, sha: GH_SHA });
       fetch(GH_API, { method: "PUT", headers: { "Authorization": "token " + GH_TOKEN, "Accept": "application/vnd.github.v3+json", "Content-Type": "application/json" }, body: body })
         .then(function(r) { return r.json(); })

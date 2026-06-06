@@ -408,11 +408,11 @@
   </footer>
 
   <script>
-    // Načti přímo z GitHubu (obejde GitHub Pages cache)
-    fetch('https://raw.githubusercontent.com/honzadvorak912-afk/uzeniny-trebic/main/products.json?t=' + Date.now())
-      .then(function(r) { return r.text(); })
-      .then(function(txt) {
-        var db = JSON.parse(txt);
+    fetch('https://api.github.com/repos/honzadvorak912-afk/uzeniny-trebic/contents/products.json')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var bytes = Uint8Array.from(atob(data.content.replace(/\n/g,'')), function(c){return c.charCodeAt(0);});
+        var db = JSON.parse(new TextDecoder('utf-8').decode(bytes));
         var hidden  = db.hiddenProducts || [];
         var deleted = db.deletedStaticProducts || [];
         var hiddenC = db.hiddenCustomProducts || [];
@@ -432,7 +432,7 @@
           c.appendChild(div);
           if (window._ro) window._ro.observe(div);
         });
-      }).catch(function(e) { console.warn('products.json error', e); });
+      }).catch(function(e) { console.warn('Chyba:', e); });
   </script>
 
   <script>
@@ -462,6 +462,7 @@
         });
       }, { threshold: 0.12 });
       revealEls.forEach(function(el) { observer.observe(el); });
+      window._ro = observer;
       window._ro = observer;
       window._ro = observer;
       window._ro = observer;

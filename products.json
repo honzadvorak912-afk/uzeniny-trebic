@@ -14,7 +14,9 @@
       "note": "ddd"
     }
   ],
-  "hiddenProducts": [],
+  "hiddenProducts": [
+    35
+  ],
   "deletedStaticProducts": [],
   "hiddenCustomProducts": [
     0,

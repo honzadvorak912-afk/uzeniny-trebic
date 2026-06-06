@@ -1,1 +1,13 @@
-{"adminProducts":[],"hiddenProducts":[],"deletedStaticProducts":[],"hiddenCustomProducts":[]}
+{
+  "adminProducts": [
+    {
+      "id": 1780727548981,
+      "name": "Dortík",
+      "price": "500 kč/kg",
+      "note": "ddd"
+    }
+  ],
+  "hiddenProducts": [],
+  "deletedStaticProducts": [],
+  "hiddenCustomProducts": []
+}

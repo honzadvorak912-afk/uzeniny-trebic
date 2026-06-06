@@ -26,10 +26,9 @@
     .image-upload-placeholder{display:flex;flex-direction:column;align-items:center;gap:.4rem;padding:1.2rem;color:#a89880;font-size:.82rem;text-align:center}
     .image-upload-icon{font-size:1.8rem}
     .image-upload-hint{font-size:.7rem;opacity:.6}
-    .image-preview-thumb{width:100%;max-height:160px;object-fit:contain;padding:.4rem}
+    .img-prev{width:100%;max-height:160px;object-fit:contain;padding:.4rem}
     .image-remove-btn{background:rgba(192,57,43,.15);border:1px solid #c0392b;color:#c0392b;font-size:.7rem;padding:.3rem .8rem;cursor:pointer;margin:.4rem;transition:all .2s}
     .image-remove-btn:hover{background:#c0392b;color:#fff}
-
   </style>
 </head>
 <body>
@@ -85,7 +84,7 @@
                   <span>Klikněte pro výběr obrázku</span>
                   <span class="image-upload-hint">JPG, PNG, WEBP · automaticky zkomprimováno</span>
                 </div>
-                <img class="image-preview-thumb" id="imagePreview" src="" alt="" style="display:none;">
+                <img class="img-prev" id="imagePreview" src="" alt="" style="display:none;">
                 <button class="image-remove-btn" id="imageRemoveBtn" style="display:none;" type="button">&#x2715; Odebrat</button>
               </div>
             </div>
@@ -255,17 +254,17 @@
     });
 
     document.getElementById("addProductBtn").addEventListener("click", function() {
-      var name  = fixEncoding(document.getElementById("productName").value.trim());
-      var price = fixEncoding(document.getElementById("productPrice").value.trim());
-      var note  = fixEncoding(document.getElementById("productNote").value.trim());
+      var name  = document.getElementById("productName").value.trim();
+      var price = document.getElementById("productPrice").value.trim();
+      var note  = document.getElementById("productNote").value.trim();
       if (!name)  { showFormError("Zadejte název produktu."); return; }
       if (!price) { showFormError("Zadejte cenu produktu."); return; }
-      DB.adminProducts.unshift({ id: Date.now(), name: name, price: price, note: note, image: currentImageDataUrl || null });
+      DB.adminProducts.unshift({ id: Date.now(), name: fixEncoding(name), price: fixEncoding(price), note: fixEncoding(note), image: currentImageDataUrl||null });
+      var r=document.getElementById("imageRemoveBtn"); if(r) r.click();
       renderProducts();
       document.getElementById("productName").value = "";
       document.getElementById("productPrice").value = "";
       document.getElementById("productNote").value = "";
-      if (imageRemoveBtn) imageRemoveBtn.click();
       saveToGitHub(function() { showFormSuccess("Produkt přidán!"); });
     });
 
@@ -320,55 +319,53 @@
       setTimeout(function() { el.style.display = "none"; }, 3000);
     }
   
-    // === IMAGE UPLOAD ===
+    // IMAGE UPLOAD + KOMPRESE
     var currentImageDataUrl = null;
-    var imageUploadArea  = document.getElementById('imageUploadArea');
-    var imageInput       = document.getElementById('imageInput');
-    var imagePlaceholder = document.getElementById('imagePlaceholder');
-    var imagePreviewEl   = document.getElementById('imagePreview');
-    var imageRemoveBtn   = document.getElementById('imageRemoveBtn');
-
-    imageUploadArea.addEventListener('click', function(e) { if (e.target !== imageRemoveBtn) imageInput.click(); });
-    imageUploadArea.addEventListener('dragover', function(e) { e.preventDefault(); imageUploadArea.style.borderColor='#c9a84c'; });
-    imageUploadArea.addEventListener('dragleave', function() { imageUploadArea.style.borderColor=''; });
-    imageUploadArea.addEventListener('drop', function(e) { e.preventDefault(); imageUploadArea.style.borderColor=''; if (e.dataTransfer.files[0]) handleImageFile(e.dataTransfer.files[0]); });
-    imageInput.addEventListener('change', function() { if (imageInput.files[0]) handleImageFile(imageInput.files[0]); });
-
-    function handleImageFile(file) {
-      var reader = new FileReader();
-      reader.onload = function(e) {
-        var img = new Image();
-        img.onload = function() {
-          var MAX = 1200, w = img.width, h = img.height;
-          if (w > MAX || h > MAX) { if (w > h) { h = Math.round(h*MAX/w); w = MAX; } else { w = Math.round(w*MAX/h); h = MAX; } }
-          var canvas = document.createElement('canvas'); canvas.width = w; canvas.height = h;
-          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-          currentImageDataUrl = canvas.toDataURL('image/jpeg', 0.82);
-          imagePreviewEl.src = currentImageDataUrl; imagePreviewEl.style.display = 'block';
-          imagePlaceholder.style.display = 'none'; imageRemoveBtn.style.display = 'block';
+    (function() {
+      var area = document.getElementById('imageUploadArea');
+      var inp  = document.getElementById('imageInput');
+      var ph   = document.getElementById('imagePlaceholder');
+      var prev = document.getElementById('imagePreview');
+      var rmv  = document.getElementById('imageRemoveBtn');
+      if (!area) return;
+      area.addEventListener('click', function(e) { if (e.target !== rmv) inp.click(); });
+      area.addEventListener('dragover', function(e) { e.preventDefault(); area.style.borderColor='#c9a84c'; });
+      area.addEventListener('dragleave', function() { area.style.borderColor=''; });
+      area.addEventListener('drop', function(e) { e.preventDefault(); area.style.borderColor=''; if (e.dataTransfer.files[0]) handleImg(e.dataTransfer.files[0]); });
+      inp.addEventListener('change', function() { if (inp.files[0]) handleImg(inp.files[0]); });
+      function handleImg(file) {
+        var reader = new FileReader();
+        reader.onload = function(ev) {
+          var img = new Image();
+          img.onload = function() {
+            var MAX=1200, w=img.width, h=img.height;
+            if (w>MAX||h>MAX) { if(w>h){h=Math.round(h*MAX/w);w=MAX;}else{w=Math.round(w*MAX/h);h=MAX;} }
+            var c=document.createElement('canvas'); c.width=w; c.height=h;
+            c.getContext('2d').drawImage(img,0,0,w,h);
+            currentImageDataUrl=c.toDataURL('image/jpeg',0.82);
+            prev.src=currentImageDataUrl; prev.style.display='block';
+            ph.style.display='none'; rmv.style.display='block';
+          };
+          img.src=ev.target.result;
         };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-    imageRemoveBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      currentImageDataUrl = null; imagePreviewEl.src = ''; imagePreviewEl.style.display = 'none';
-      imagePlaceholder.style.display = 'flex'; imageRemoveBtn.style.display = 'none'; imageInput.value = '';
-    });
+        reader.readAsDataURL(file);
+      }
+      rmv.addEventListener('click', function(e) {
+        e.stopPropagation();
+        currentImageDataUrl=null; prev.src=''; prev.style.display='none';
+        ph.style.display='flex'; rmv.style.display='none'; inp.value='';
+      });
+    })();
 
-    // === ENCODING FIX ===
+    // ENCODING FIX (opraví DortÃ­k → Dortík)
     function fixEncoding(str) {
       try {
-        var bytes = new Uint8Array(str.length);
-        for (var i = 0; i < str.length; i++) bytes[i] = str.charCodeAt(i) & 0xff;
-        var decoded = new TextDecoder('utf-8', {fatal:true}).decode(bytes);
-        var badOrig = (str.match(/[\xC0-\xFF]/g)||[]).length;
-        var badDec  = (decoded.match(/[\xC0-\xFF]/g)||[]).length;
-        return badDec < badOrig ? decoded : str;
-      } catch(e) { return str; }
+        var b=new Uint8Array(str.length);
+        for(var i=0;i<str.length;i++) b[i]=str.charCodeAt(i)&0xff;
+        var d=new TextDecoder('utf-8',{fatal:true}).decode(b);
+        return ((d.match(/[\xC0-\xFF]/g)||[]).length<(str.match(/[\xC0-\xFF]/g)||[]).length)?d:str;
+      } catch(e){return str;}
     }
-
   </script>
 </body>
 </html>

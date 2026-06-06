@@ -159,7 +159,9 @@
         .then(function(r) { return r.json(); })
         .then(function(data) {
           GH_SHA = data.sha;
-          var content = atob(data.content.replace(/\n/g, ""));
+          var b64 = data.content.replace(/\n/g, "");
+          var bytes = Uint8Array.from(atob(b64), function(c){return c.charCodeAt(0);});
+          var content = new TextDecoder('utf-8').decode(bytes);
           DB = JSON.parse(content);
           if (!DB.adminProducts) DB.adminProducts = [];
           if (!DB.hiddenProducts) DB.hiddenProducts = [];

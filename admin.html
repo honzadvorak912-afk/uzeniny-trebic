@@ -155,13 +155,14 @@
 
     function loadFromGitHub() {
       showSync("Načítám z GitHubu...", "loading");
+      // Načti přímo SHA přes API
       fetch(GH_API, { headers: { "Authorization": "token " + GH_TOKEN, "Accept": "application/vnd.github.v3+json" } })
         .then(function(r) { return r.json(); })
         .then(function(data) {
           GH_SHA = data.sha;
-          var b64 = data.content.replace(/\n/g, "");
-          var bytes = Uint8Array.from(atob(b64), function(c){return c.charCodeAt(0);});
-          var content = new TextDecoder('utf-8').decode(bytes);
+          // Dekóduj obsah správně jako UTF-8
+          var bytes = Uint8Array.from(atob(data.content.replace(/\n/g, "")), function(c){return c.charCodeAt(0);});
+          var content = new TextDecoder("utf-8").decode(bytes);
           DB = JSON.parse(content);
           if (!DB.adminProducts) DB.adminProducts = [];
           if (!DB.hiddenProducts) DB.hiddenProducts = [];
@@ -171,7 +172,7 @@
           renderProducts();
           setTimeout(function() { syncStatus.style.display = "none"; }, 2000);
         })
-        .catch(function(e) { showSync("Chyba načítání: " + e.message, "err"); });
+        .catch(function(e) { showSync("Chyba načtení: " + e.message, "err"); });
     }
 
     function saveToGitHub(callback) {

@@ -1,12 +1,5 @@
 {
-  "adminProducts": [
-    {
-      "id": 1780727548981,
-      "name": "DortÃ­k",
-      "price": "500 kÄ/kg",
-      "note": "ddd"
-    }
-  ],
+  "adminProducts": [],
   "hiddenProducts": [],
   "deletedStaticProducts": [],
   "hiddenCustomProducts": []

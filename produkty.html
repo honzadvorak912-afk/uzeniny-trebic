@@ -431,7 +431,7 @@
           c.appendChild(div);
           if (window._ro) window._ro.observe(div);
         });
-      }).catch(function(){});
+      }).catch(function(e) { console.warn('products.json error', e); });
   </script>
 
   <script>
@@ -461,6 +461,7 @@
         });
       }, { threshold: 0.12 });
       revealEls.forEach(function(el) { observer.observe(el); });
+      window._ro = observer;
       window._ro = observer;
       window._revealObserver = observer;
       window._revealObserver = observer;

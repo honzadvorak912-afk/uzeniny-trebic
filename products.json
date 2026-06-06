@@ -1,6 +1,13 @@
 {
   "adminProducts": [
     {
+      "id": 1780736953931,
+      "name": "Dortík",
+      "price": "500 kč/kg",
+      "note": "",
+      "image": null
+    },
+    {
       "id": 1780736880224,
       "name": "Dortík",
       "price": "500 kč/kg",

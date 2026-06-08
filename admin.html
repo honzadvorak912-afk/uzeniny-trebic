@@ -298,7 +298,7 @@
     if (!btn) return;
     e.stopPropagation();
     var action = btn.dataset.action;
-    var idx, pos;
+    var pos;
 
     if (action === "toggle-static") {
       var pid = parseInt(btn.dataset.pid);
@@ -312,19 +312,16 @@
       renderProducts(); saveToGitHub(null);
 
     } else if (action === "toggle-custom") {
-      var pid2 = btn.dataset.pid2;
-      pos = DB.hiddenCustomProducts.indexOf(pid2);
-      if (pos >= 0) DB.hiddenCustomProducts.splice(pos, 1); else DB.hiddenCustomProducts.push(pid2);
+      var idx = parseInt(btn.dataset.idx);
+      DB.adminProducts[idx].hidden = !DB.adminProducts[idx].hidden;
       renderProducts(); saveToGitHub(null);
 
     } else if (action === "delete-custom") {
       if (!confirm("Opravdu smazat?")) return;
-      var pid3 = btn.dataset.pid2;
-      DB.adminProducts = DB.adminProducts.filter(function(p){return String(p.id)!==pid3;});
-      DB.hiddenCustomProducts = DB.hiddenCustomProducts.filter(function(id){return id!==pid3;});
+      DB.adminProducts.splice(parseInt(btn.dataset.idx), 1);
       renderProducts(); saveToGitHub(null);
     }
-  });
+  });;
 
   // PŘIDAT PRODUKT
   document.getElementById("addProductBtn").addEventListener("click", function() {
@@ -359,7 +356,7 @@
     var list = document.getElementById("adminProductList");
     var count = document.getElementById("productCount");
     var visStatic = STATIC_PRODUCTS.filter(function(p) { return DB.deletedStaticProducts.indexOf(p.pid)<0 && DB.hiddenProducts.indexOf(p.pid)<0; }).length;
-    var visCust = DB.adminProducts.filter(function(p,i) { return DB.hiddenCustomProducts.indexOf(i)<0; }).length;
+    var visCust = DB.adminProducts.filter(function(p) { return !p.hidden; }).length;
     count.textContent = "(" + (visStatic+visCust) + " viditelných)";
     var html = "";
     var activeStatic = STATIC_PRODUCTS.filter(function(p){ return DB.deletedStaticProducts.indexOf(p.pid)<0; });
@@ -378,14 +375,14 @@
     if (DB.adminProducts.length > 0) {
       html += "<div class=\"admin-section-divider\">Přidané produkty</div>";
       DB.adminProducts.forEach(function(p, i) {
-        var hidden = DB.hiddenCustomProducts.indexOf(String(p.id)) >= 0;
+        var hidden = p.hidden === true;
         html += "<div class=\"admin-product-item" + (hidden?" is-hidden":"") + "\">" +
           (p.image ? "<img class=\"admin-product-img\" src=\"" + p.image + "\" alt=\"\">" : "") +
           "<div class=\"admin-product-info\"><span class=\"admin-product-name\">" + p.name + "</span><span class=\"admin-product-price\">" + p.price + "</span>" +
           (p.note ? "<span class=\"admin-product-note\">" + p.note + "</span>" : "") + "</div>" +
           "<div class=\"admin-product-actions\">" +
-          "<button class=\"abtn " + (hidden?"abtn-show":"abtn-hide") + "\" data-action=\"toggle-custom\" data-pid2=\"" + p.id + "\">" + (hidden?"Zobrazit":"Skrýt") + "</button>" +
-          "<button class=\"abtn abtn-del\" data-action=\"delete-custom\" data-pid2=\"" + p.id + "\">Smazat</button>" +
+          "<button class=\"abtn " + (hidden?"abtn-show":"abtn-hide") + "\" data-action=\"toggle-custom\" data-idx=\"" + i + "\">" + (hidden?"Zobrazit":"Skrýt") + "</button>" +
+          "<button class=\"abtn abtn-del\" data-action=\"delete-custom\" data-idx=\"" + i + "\">Smazat</button>" +
           "</div></div>";
       });
     }

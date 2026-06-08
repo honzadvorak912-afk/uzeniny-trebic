@@ -298,37 +298,32 @@
     if (!btn) return;
     e.stopPropagation();
     var action = btn.dataset.action;
-    var idx = parseInt(btn.dataset.idx);
-    var pid = parseInt(btn.dataset.pid);
-    var pos;
 
     if (action === "toggle-static") {
-      pos = DB.hiddenProducts.indexOf(pid);
+      var pid = parseInt(btn.dataset.pid);
+      var pos = DB.hiddenProducts.indexOf(pid);
       if (pos >= 0) DB.hiddenProducts.splice(pos, 1); else DB.hiddenProducts.push(pid);
       renderProducts(); saveToGitHub(null);
 
     } else if (action === "delete-static") {
       if (!confirm("Opravdu smazat?")) return;
-      DB.deletedStaticProducts.push(pid);
+      DB.deletedStaticProducts.push(parseInt(btn.dataset.pid));
       renderProducts(); saveToGitHub(null);
 
     } else if (action === "toggle-custom") {
-      // Ulož ID produktu před renderem
-      var prodId = DB.adminProducts[idx] ? DB.adminProducts[idx].id : null;
-      if (!prodId) return;
-      pos = DB.hiddenCustomProducts.indexOf(prodId);
-      if (pos >= 0) DB.hiddenCustomProducts.splice(pos, 1); else DB.hiddenCustomProducts.push(prodId);
+      var id = parseInt(btn.dataset.id);
+      var pos2 = DB.hiddenCustomProducts.indexOf(id);
+      if (pos2 >= 0) DB.hiddenCustomProducts.splice(pos2, 1); else DB.hiddenCustomProducts.push(id);
       renderProducts(); saveToGitHub(null);
 
     } else if (action === "delete-custom") {
       if (!confirm("Opravdu smazat?")) return;
-      var delId = DB.adminProducts[idx] ? DB.adminProducts[idx].id : null;
-      if (delId === null) return;
-      DB.adminProducts.splice(idx, 1);
-      DB.hiddenCustomProducts = DB.hiddenCustomProducts.filter(function(h) { return h !== delId; });
+      var id2 = parseInt(btn.dataset.id);
+      DB.adminProducts = DB.adminProducts.filter(function(p){ return p.id !== id2; });
+      DB.hiddenCustomProducts = DB.hiddenCustomProducts.filter(function(h){ return h !== id2; });
       renderProducts(); saveToGitHub(null);
     }
-  });;;
+  });;;;
 
   // PŘIDAT PRODUKT
   document.getElementById("addProductBtn").addEventListener("click", function() {
@@ -363,7 +358,7 @@
     var list = document.getElementById("adminProductList");
     var count = document.getElementById("productCount");
     var visStatic = STATIC_PRODUCTS.filter(function(p) { return DB.deletedStaticProducts.indexOf(p.pid)<0 && DB.hiddenProducts.indexOf(p.pid)<0; }).length;
-    var visCust = DB.adminProducts.filter(function(p,i) { return DB.hiddenCustomProducts.indexOf(p.id) < 0; }).length;
+    var visCust = DB.adminProducts.filter(function(p){ return DB.hiddenCustomProducts.indexOf(p.id) < 0; }).length; }).length;
     count.textContent = "(" + (visStatic+visCust) + " viditelných)";
     var html = "";
     var activeStatic = STATIC_PRODUCTS.filter(function(p){ return DB.deletedStaticProducts.indexOf(p.pid)<0; });
@@ -381,16 +376,20 @@
     }
     if (DB.adminProducts.length > 0) {
       html += "<div class=\"admin-section-divider\">Přidané produkty</div>";
-      DB.adminProducts.forEach(function(p, i) {
-        var hidden = p.hidden === true;
-        html += "<div class=\"admin-product-item" + (hidden?" is-hidden":"") + "\">" +
+      DB.adminProducts.forEach(function(p) {
+        var hidden = DB.hiddenCustomProducts.indexOf(p.id) >= 0;
+        html += "<div class=\"admin-product-item" + (hidden ? " is-hidden" : "") + "\">" +
           (p.image ? "<img class=\"admin-product-img\" src=\"" + p.image + "\" alt=\"\">" : "") +
-          "<div class=\"admin-product-info\"><span class=\"admin-product-name\">" + p.name + "</span><span class=\"admin-product-price\">" + p.price + "</span>" +
-          (p.note ? "<span class=\"admin-product-note\">" + p.note + "</span>" : "") + "</div>" +
+          "<div class=\"admin-product-info\">" +
+            "<span class=\"admin-product-name\">" + p.name + "</span>" +
+            "<span class=\"admin-product-price\">" + p.price + "</span>" +
+            (p.note ? "<span class=\"admin-product-note\">" + p.note + "</span>" : "") +
+          "</div>" +
           "<div class=\"admin-product-actions\">" +
-          "<button class=\"abtn " + (hidden?"abtn-show":"abtn-hide") + "\" data-action=\"toggle-custom\" data-idx=\"" + i + "\">" + (hidden?"Zobrazit":"Skrýt") + "</button>" +
-          "<button class=\"abtn abtn-del\" data-action=\"delete-custom\" data-idx=\"" + i + "\">Smazat</button>" +
-          "</div></div>";
+            "<button class=\"abtn " + (hidden ? "abtn-show" : "abtn-hide") + "\" data-action=\"toggle-custom\" data-id=\"" + p.id + "\">" + (hidden ? "Zobrazit" : "Skrýt") + "</button>" +
+            "<button class=\"abtn abtn-del\" data-action=\"delete-custom\" data-id=\"" + p.id + "\">Smazat</button>" +
+          "</div>" +
+        "</div>";
       });
     }
     list.innerHTML = html || "<div class=\"admin-empty\">Žádné produkty.</div>";

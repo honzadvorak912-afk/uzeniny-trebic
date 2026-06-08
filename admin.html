@@ -6,13 +6,13 @@ document.getElementById('loginBtn').addEventListener('click', function() {
           var bytes = Uint8Array.from(atob(data.content.replace(/\n/g,'')), function(c){return c.charCodeAt(0);});
           var db = JSON.parse(new TextDecoder('utf-8').decode(bytes));
           if (pwd === (db.password || ADMIN_PASSWORD)) {
-            loginOverlay.style.display = 'none'; adminPanel.style.display = 'block';
-            sessionStorage.setItem('adminAuth', '1'); loadFromGitHub();
-          } else { loginError.style.display = 'block'; passwordInput.value = ''; passwordInput.focus(); }
+            loginOverlay.style.display='none'; adminPanel.style.display='block';
+            sessionStorage.setItem('adminAuth','1'); loadFromGitHub();
+          } else { loginError.style.display='block'; passwordInput.value=''; passwordInput.focus(); }
         })
         .catch(function() {
-          if (pwd === ADMIN_PASSWORD) { loginOverlay.style.display = 'none'; adminPanel.style.display = 'block'; sessionStorage.setItem('adminAuth', '1'); loadFromGitHub(); }
-          else { loginError.style.display = 'block'; passwordInput.value = ''; passwordInput.focus(); }
+          if (pwd === ADMIN_PASSWORD) { loginOverlay.style.display='none'; adminPanel.style.display='block'; sessionStorage.setItem('adminAuth','1'); loadFromGitHub(); }
+          else { loginError.style.display='block'; passwordInput.value=''; passwordInput.focus(); }
         });
     });    .abtn-hide{border-color:rgba(201,168,76,.35);color:#a89880}.abtn-hide:hover{border-color:#c9a84c;color:#c9a84c}
     .abtn-show{border-color:#c9a84c;color:#c9a84c}.abtn-show:hover{background:#c9a84c;color:#0e0c09}
@@ -81,18 +81,11 @@ document.getElementById('loginBtn').addEventListener('click', function() {
         </div>
       </div>
     </div>
-
     <div style="max-width:1200px;margin:2rem auto;padding:0 2rem;">
       <h2 style="font-family:'Playfair Display',serif;color:var(--text-light);font-size:1.3rem;margin-bottom:1.5rem;padding-bottom:.8rem;border-bottom:1px solid var(--border);">Změna hesla</h2>
       <div style="max-width:420px;display:flex;flex-direction:column;gap:1.2rem;">
-        <div style="display:flex;flex-direction:column;gap:.4rem;">
-          <label style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);">Nové heslo *</label>
-          <input class="form-input" type="password" id="newPassword" placeholder="Zadejte nové heslo">
-        </div>
-        <div style="display:flex;flex-direction:column;gap:.4rem;">
-          <label style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);">Potvrdit heslo *</label>
-          <input class="form-input" type="password" id="confirmPassword" placeholder="Zopakujte nové heslo">
-        </div>
+        <div style="display:flex;flex-direction:column;gap:.4rem;"><label style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);">Nové heslo *</label><input class="form-input" type="password" id="newPassword" placeholder="Zadejte nové heslo"></div>
+        <div style="display:flex;flex-direction:column;gap:.4rem;"><label style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);">Potvrdit heslo *</label><input class="form-input" type="password" id="confirmPassword" placeholder="Zopakujte nové heslo"></div>
         <div class="form-error" id="passwordError"></div>
         <div class="form-success" id="passwordSuccess"></div>
         <button class="btn btn-primary" type="button" id="changePasswordBtn" style="padding:1rem;">ZMĚNIT HESLO</button>
@@ -106,7 +99,7 @@ document.getElementById('loginBtn').addEventListener('click', function() {
 
   <script>
     var ADMIN_PASSWORD = "uzeniny2024";
-    var GH_TOKEN = (function(){var a="github_pat_11B6PQH4I0XPqBPWrSQYPm_",b="8j1R2Vatk2PyO1bhwChQ11pXpBhzbAKjmVUFFGkzPygYN3OW2UN17byKQRn";return a+b;})();
+    var GH_TOKEN = "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";
     var GH_REPO = "honzadvorak912-afk/uzeniny-trebic";
     var GH_FILE = "products.json";
     var GH_API = "https://api.github.com/repos/" + GH_REPO + "/contents/" + GH_FILE;
@@ -181,7 +174,7 @@ document.getElementById('loginBtn').addEventListener('click', function() {
         .then(function(r) { return r.json(); })
         .then(function(data) {
           if (data.content) { GH_SHA = data.content.sha; showSync("Uloženo!", "ok"); setTimeout(function() { syncStatus.style.display = "none"; }, 2000); if (callback) callback(); }
-          else { showSync("Chyba: " + (data.message || "neznámá"), "err"); }
+          else { showSync("Chyba: " + (data.message||""), "err"); }
         })
         .catch(function(e) { showSync("Chyba: " + e.message, "err"); });
     }
@@ -322,17 +315,16 @@ document.getElementById('loginBtn').addEventListener('click', function() {
       var confirmPwd = document.getElementById('confirmPassword').value.trim();
       var errEl = document.getElementById('passwordError');
       var okEl = document.getElementById('passwordSuccess');
-      errEl.style.display = 'none'; okEl.style.display = 'none';
-      if (!newPwd) { errEl.textContent = 'Zadejte nové heslo.'; errEl.style.display = 'block'; return; }
-      if (newPwd.length < 6) { errEl.textContent = 'Heslo musí mít alespoň 6 znaků.'; errEl.style.display = 'block'; return; }
-      if (newPwd !== confirmPwd) { errEl.textContent = 'Hesla se neshodují.'; errEl.style.display = 'block'; return; }
+      errEl.style.display='none'; okEl.style.display='none';
+      if (!newPwd) { errEl.textContent='Zadejte nové heslo.'; errEl.style.display='block'; return; }
+      if (newPwd.length < 6) { errEl.textContent='Heslo musí mít alespoň 6 znaků.'; errEl.style.display='block'; return; }
+      if (newPwd !== confirmPwd) { errEl.textContent='Hesla se neshodují.'; errEl.style.display='block'; return; }
       DB.password = newPwd;
       saveToGitHub(function() {
-        okEl.textContent = 'Heslo změněno! Příště se přihlaš novým heslem.';
-        okEl.style.display = 'block';
-        document.getElementById('newPassword').value = '';
-        document.getElementById('confirmPassword').value = '';
-        setTimeout(function() { okEl.style.display = 'none'; }, 4000);
+        okEl.textContent='Heslo změněno! Příště se přihlaš novým heslem.'; okEl.style.display='block';
+        document.getElementById('newPassword').value='';
+        document.getElementById('confirmPassword').value='';
+        setTimeout(function() { okEl.style.display='none'; }, 4000);
       });
     });
   </script>

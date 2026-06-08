@@ -25,7 +25,9 @@
   "hiddenProducts": [],
   "deletedStaticProducts": [],
   "hiddenCustomProducts": [
-    0
+    0,
+    1,
+    2
   ],
   "password": "uzeniny2026"
 }

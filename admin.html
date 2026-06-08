@@ -298,30 +298,37 @@
     if (!btn) return;
     e.stopPropagation();
     var action = btn.dataset.action;
+    var idx = parseInt(btn.dataset.idx);
+    var pid = parseInt(btn.dataset.pid);
     var pos;
 
     if (action === "toggle-static") {
-      var pid = parseInt(btn.dataset.pid);
       pos = DB.hiddenProducts.indexOf(pid);
       if (pos >= 0) DB.hiddenProducts.splice(pos, 1); else DB.hiddenProducts.push(pid);
       renderProducts(); saveToGitHub(null);
 
     } else if (action === "delete-static") {
       if (!confirm("Opravdu smazat?")) return;
-      DB.deletedStaticProducts.push(parseInt(btn.dataset.pid));
+      DB.deletedStaticProducts.push(pid);
       renderProducts(); saveToGitHub(null);
 
     } else if (action === "toggle-custom") {
-      var idx = parseInt(btn.dataset.idx);
-      DB.adminProducts[idx].hidden = !DB.adminProducts[idx].hidden;
+      // Ulož ID produktu před renderem
+      var prodId = DB.adminProducts[idx] ? DB.adminProducts[idx].id : null;
+      if (!prodId) return;
+      pos = DB.hiddenCustomProducts.indexOf(prodId);
+      if (pos >= 0) DB.hiddenCustomProducts.splice(pos, 1); else DB.hiddenCustomProducts.push(prodId);
       renderProducts(); saveToGitHub(null);
 
     } else if (action === "delete-custom") {
       if (!confirm("Opravdu smazat?")) return;
-      DB.adminProducts.splice(parseInt(btn.dataset.idx), 1);
+      var delId = DB.adminProducts[idx] ? DB.adminProducts[idx].id : null;
+      if (delId === null) return;
+      DB.adminProducts.splice(idx, 1);
+      DB.hiddenCustomProducts = DB.hiddenCustomProducts.filter(function(h) { return h !== delId; });
       renderProducts(); saveToGitHub(null);
     }
-  });;
+  });;;
 
   // PŘIDAT PRODUKT
   document.getElementById("addProductBtn").addEventListener("click", function() {
@@ -356,7 +363,7 @@
     var list = document.getElementById("adminProductList");
     var count = document.getElementById("productCount");
     var visStatic = STATIC_PRODUCTS.filter(function(p) { return DB.deletedStaticProducts.indexOf(p.pid)<0 && DB.hiddenProducts.indexOf(p.pid)<0; }).length;
-    var visCust = DB.adminProducts.filter(function(p) { return !p.hidden; }).length;
+    var visCust = DB.adminProducts.filter(function(p,i) { return DB.hiddenCustomProducts.indexOf(p.id) < 0; }).length;
     count.textContent = "(" + (visStatic+visCust) + " viditelných)";
     var html = "";
     var activeStatic = STATIC_PRODUCTS.filter(function(p){ return DB.deletedStaticProducts.indexOf(p.pid)<0; });

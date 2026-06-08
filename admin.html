@@ -121,7 +121,7 @@
     var syncStatus = document.getElementById("syncStatus");
 
     document.getElementById("loginBtn").addEventListener("click", function() {
-      if (passwordInput.value === ADMIN_PASSWORD) {
+      if (passwordInput.value === ADMIN_PASSWORD || (window.DB && window.DB.password && passwordInput.value === window.DB.password)) {
         loginOverlay.style.display = "none";
         adminPanel.style.display = "block";
         sessionStorage.setItem("adminAuth", "1");
@@ -169,6 +169,7 @@
           if (!DB.deletedStaticProducts) DB.deletedStaticProducts = [];
           if (!DB.hiddenCustomProducts) DB.hiddenCustomProducts = [];
           showSync("Databáze načtena", "ok");
+          if (DB.password) ADMIN_PASSWORD = DB.password;
           renderProducts();
           setTimeout(function() { syncStatus.style.display = "none"; }, 2000);
         })
@@ -383,6 +384,28 @@
         return ((d.match(/[\xC0-\xFF]/g)||[]).length<(str.match(/[\xC0-\xFF]/g)||[]).length)?d:str;
       } catch(e){return str;}
     }
+  
+    // ZMĚNA HESLA
+    document.getElementById('changePasswordBtn').addEventListener('click', function() {
+      var newPwd = document.getElementById('newPassword').value.trim();
+      var confirmPwd = document.getElementById('confirmPassword').value.trim();
+      var errEl = document.getElementById('passwordError');
+      var okEl = document.getElementById('passwordSuccess');
+      errEl.style.display = 'none';
+      okEl.style.display = 'none';
+      if (!newPwd) { errEl.textContent = 'Zadejte nové heslo.'; errEl.style.display = 'block'; return; }
+      if (newPwd.length < 6) { errEl.textContent = 'Heslo musí mít alespoň 6 znaků.'; errEl.style.display = 'block'; return; }
+      if (newPwd !== confirmPwd) { errEl.textContent = 'Hesla se neshodují.'; errEl.style.display = 'block'; return; }
+      // Ulož nové heslo do products.json
+      DB.password = newPwd;
+      saveToGitHub(function() {
+        okEl.textContent = 'Heslo bylo změněno!';
+        okEl.style.display = 'block';
+        document.getElementById('newPassword').value = '';
+        document.getElementById('confirmPassword').value = '';
+        setTimeout(function() { okEl.style.display = 'none'; }, 3000);
+      });
+    });
   </script>
 </body>
 </html>

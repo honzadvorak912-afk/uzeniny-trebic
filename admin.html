@@ -216,6 +216,9 @@
         if (!DB.hiddenProducts) DB.hiddenProducts = [];
         if (!DB.deletedStaticProducts) DB.deletedStaticProducts = [];
         if (!DB.hiddenCustomProducts) DB.hiddenCustomProducts = [];
+        // Vyčisti staré indexy, ponech jen string ID
+        var validIds = DB.adminProducts.map(function(p){return String(p.id);});
+        DB.hiddenCustomProducts = DB.hiddenCustomProducts.filter(function(h){return validIds.indexOf(String(h))>=0;}).map(function(h){return String(h);});
         showSync("Databáze načtena", "ok");
         renderProducts();
         setTimeout(function() { syncStatus.style.display = "none"; }, 2000);

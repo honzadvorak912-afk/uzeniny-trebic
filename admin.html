@@ -435,14 +435,41 @@
       if (!newPwd) { errEl.textContent = 'Zadejte nové heslo.'; errEl.style.display = 'block'; return; }
       if (newPwd.length < 6) { errEl.textContent = 'Heslo musí mít alespoň 6 znaků.'; errEl.style.display = 'block'; return; }
       if (newPwd !== confirmPwd) { errEl.textContent = 'Hesla se neshodují.'; errEl.style.display = 'block'; return; }
-      DB.password = newPwd;
-      saveToGitHub(function() {
-        ADMIN_PASSWORD = newPwd;
-        okEl.textContent = 'Heslo bylo změněno!'; okEl.style.display = 'block';
-        document.getElementById('newPassword').value = '';
-        document.getElementById('confirmPassword').value = '';
-        setTimeout(function() { okEl.style.display = 'none'; }, 3000);
-      });
+      okEl.textContent = 'Ukládám...'; okEl.style.display = 'block';
+      // Změň heslo přímo v admin.html na GitHubu
+      fetch('https://api.github.com/repos/' + GH_REPO + '/contents/admin.html', {
+        headers: { 'Authorization': 'token ' + GH_TOKEN }
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var bytes = Uint8Array.from(atob(data.content.replace(/\n/g,'')), function(c){return c.charCodeAt(0);});
+        var adminHtml = new TextDecoder('utf-8').decode(bytes);
+        // Nahraď staré heslo novým
+        adminHtml = adminHtml.replace(
+          'var ADMIN_PASSWORD = "' + ADMIN_PASSWORD + '"',
+          'var ADMIN_PASSWORD = "' + newPwd + '"'
+        );
+        var enc = btoa(Array.from(new TextEncoder().encode(adminHtml)).map(function(b){return String.fromCharCode(b);}).join(''));
+        return fetch('https://api.github.com/repos/' + GH_REPO + '/contents/admin.html', {
+          method: 'PUT',
+          headers: { 'Authorization': 'token ' + GH_TOKEN, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: 'Zmena hesla', content: enc, sha: data.sha })
+        });
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(res) {
+        if (res.content) {
+          ADMIN_PASSWORD = newPwd;
+          okEl.textContent = 'Heslo bylo změněno!'; okEl.style.display = 'block';
+          document.getElementById('newPassword').value = '';
+          document.getElementById('confirmPassword').value = '';
+          setTimeout(function() { okEl.style.display = 'none'; }, 3000);
+        } else {
+          errEl.textContent = 'Chyba: ' + (res.message || 'neznámá'); errEl.style.display = 'block';
+          okEl.style.display = 'none';
+        }
+      })
+      .catch(function(e) { errEl.textContent = 'Chyba: ' + e.message; errEl.style.display = 'block'; okEl.style.display = 'none'; });
     });
   </script>
 </body>

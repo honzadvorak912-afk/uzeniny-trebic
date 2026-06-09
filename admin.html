@@ -358,7 +358,7 @@
     var list = document.getElementById("adminProductList");
     var count = document.getElementById("productCount");
     var visStatic = STATIC_PRODUCTS.filter(function(p) { return DB.deletedStaticProducts.indexOf(p.pid)<0 && DB.hiddenProducts.indexOf(p.pid)<0; }).length;
-    var visCust = DB.adminProducts.filter(function(p){ return DB.hiddenCustomProducts.indexOf(p.id) < 0; }).length; }).length;
+    var visCust = DB.adminProducts.filter(function(p){ return DB.hiddenCustomProducts.indexOf(p.id) < 0; }).length;
     count.textContent = "(" + (visStatic+visCust) + " viditelných)";
     var html = "";
     var activeStatic = STATIC_PRODUCTS.filter(function(p){ return DB.deletedStaticProducts.indexOf(p.pid)<0; });

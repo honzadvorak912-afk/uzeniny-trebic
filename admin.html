@@ -216,9 +216,7 @@
         if (!DB.hiddenProducts) DB.hiddenProducts = [];
         if (!DB.deletedStaticProducts) DB.deletedStaticProducts = [];
         if (!DB.hiddenCustomProducts) DB.hiddenCustomProducts = [];
-        var validIds = DB.adminProducts.map(function(p){return String(p.id);});
-        DB.hiddenCustomProducts = DB.hiddenCustomProducts.filter(function(h){return validIds.indexOf(String(h))>=0;}).map(function(h){return String(h);});
-        // Vyčisti staré indexy, ponech jen string ID
+        // Vyčisti osiřelé záznamy, ponech jen platná string ID existujících produktů
         var validIds = DB.adminProducts.map(function(p){return String(p.id);});
         DB.hiddenCustomProducts = DB.hiddenCustomProducts.filter(function(h){return validIds.indexOf(String(h))>=0;}).map(function(h){return String(h);});
         showSync("Databáze načtena", "ok");

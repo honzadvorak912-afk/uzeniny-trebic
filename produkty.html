@@ -408,22 +408,20 @@
   </footer>
 
   <script>
-    fetch('https://api.github.com/repos/honzadvorak912-afk/uzeniny-trebic/contents/products.json')
+    fetch('products.json?t=' + Date.now(), { cache: 'no-store' })
       .then(function(r) { return r.json(); })
-      .then(function(data) {
-        var bytes = Uint8Array.from(atob(data.content.replace(/\n/g,'')), function(c){return c.charCodeAt(0);});
-        var db = JSON.parse(new TextDecoder('utf-8').decode(bytes));
-        var hidden  = db.hiddenProducts || [];
-        var deleted = db.deletedStaticProducts || [];
-        var hiddenC = db.hiddenCustomProducts || [];
+      .then(function(db) {
+        var hidden  = (db.hiddenProducts || []).map(Number);
+        var deleted = (db.deletedStaticProducts || []).map(Number);
+        var hiddenC = (db.hiddenCustomProducts || []).map(String);
         var prods   = db.adminProducts || [];
         document.querySelectorAll('.product-item[data-pid]').forEach(function(el) {
           var pid = parseInt(el.getAttribute('data-pid'));
           if (hidden.indexOf(pid) >= 0 || deleted.indexOf(pid) >= 0) el.style.display = 'none';
         });
         var c = document.getElementById('adminProductsContainer');
-        prods.forEach(function(p, i) {
-          if (hiddenC.indexOf(i) >= 0) return;
+        prods.forEach(function(p) {
+          if (hiddenC.indexOf(String(p.id)) >= 0) return;
           var div = document.createElement('div');
           div.className = 'product-item reveal';
           var img = p.image ? '<img class="product-item__img" src="' + p.image + '" alt="">' : '';

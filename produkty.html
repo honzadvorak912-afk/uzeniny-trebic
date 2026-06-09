@@ -408,7 +408,7 @@
   </footer>
 
   <script>
-    fetch('products.json?t=' + Date.now(), { cache: 'no-store' })
+    fetch('https://raw.githubusercontent.com/honzadvorak912-afk/uzeniny-trebic/main/products.json?t=' + Date.now(), { cache: 'no-store' })
       .then(function(r) { return r.json(); })
       .then(function(db) {
         var hidden  = (db.hiddenProducts || []).map(Number);

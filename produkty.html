@@ -408,29 +408,43 @@
   </footer>
 
   <script>
-    fetch('https://raw.githubusercontent.com/honzadvorak912-afk/uzeniny-trebic/main/products.json?t=' + Date.now(), { cache: 'no-store' })
-      .then(function(r) { return r.json(); })
-      .then(function(db) {
-        var hidden  = (db.hiddenProducts || []).map(Number);
-        var deleted = (db.deletedStaticProducts || []).map(Number);
-        var hiddenC = (db.hiddenCustomProducts || []).map(String);
-        var prods   = db.adminProducts || [];
-        document.querySelectorAll('.product-item[data-pid]').forEach(function(el) {
-          var pid = parseInt(el.getAttribute('data-pid'));
-          if (hidden.indexOf(pid) >= 0 || deleted.indexOf(pid) >= 0) el.style.display = 'none';
-        });
-        var c = document.getElementById('adminProductsContainer');
-        prods.forEach(function(p) {
-          if (hiddenC.indexOf(String(p.id)) >= 0) return;
-          var div = document.createElement('div');
-          div.className = 'product-item reveal';
-          var img = p.image ? '<img class="product-item__img" src="' + p.image + '" alt="">' : '';
-          var note = p.note ? '<span class="product-item__note">' + p.note + '</span>' : '';
-          div.innerHTML = img + '<span class="product-item__name">' + p.name + '</span><span class="product-item__price">' + p.price + note + '</span>';
-          c.appendChild(div);
-          if (window._ro) window._ro.observe(div);
-        });
-      }).catch(function(e) { console.warn('Chyba:', e); });
+    function _renderProducts(db) {
+      var hidden  = (db.hiddenProducts || []).map(Number);
+      var deleted = (db.deletedStaticProducts || []).map(Number);
+      var hiddenC = (db.hiddenCustomProducts || []).map(String);
+      var prods   = db.adminProducts || [];
+      document.querySelectorAll('.product-item[data-pid]').forEach(function(el) {
+        var pid = parseInt(el.getAttribute('data-pid'));
+        if (hidden.indexOf(pid) >= 0 || deleted.indexOf(pid) >= 0) el.style.display = 'none';
+      });
+      var c = document.getElementById('adminProductsContainer');
+      c.innerHTML = '';
+      prods.forEach(function(p) {
+        if (hiddenC.indexOf(String(p.id)) >= 0) return;
+        var div = document.createElement('div');
+        div.className = 'product-item reveal';
+        var img = p.image ? '<img class="product-item__img" src="' + p.image + '" alt="">' : '';
+        var note = p.note ? '<span class="product-item__note">' + p.note + '</span>' : '';
+        div.innerHTML = img + '<span class="product-item__name">' + p.name + '</span><span class="product-item__price">' + p.price + note + '</span>';
+        c.appendChild(div);
+        if (window._ro) window._ro.observe(div);
+      });
+    }
+
+    // 1) Zkus GitHub API — ukáže data hned po uložení (žádná 5min cache).
+    // 2) Když selže (např. rate-limit), spadni na raw.githubusercontent jako zálohu.
+    fetch('https://api.github.com/repos/honzadvorak912-afk/uzeniny-trebic/contents/products.json?t=' + Date.now(), { cache: 'no-store' })
+      .then(function(r) { if (!r.ok) throw new Error('api ' + r.status); return r.json(); })
+      .then(function(data) {
+        var bytes = Uint8Array.from(atob(data.content.replace(/\n/g, '')), function(c){ return c.charCodeAt(0); });
+        _renderProducts(JSON.parse(new TextDecoder('utf-8').decode(bytes)));
+      })
+      .catch(function() {
+        fetch('https://raw.githubusercontent.com/honzadvorak912-afk/uzeniny-trebic/main/products.json?t=' + Date.now(), { cache: 'no-store' })
+          .then(function(r) { return r.json(); })
+          .then(_renderProducts)
+          .catch(function(e) { console.warn('Chyba:', e); });
+      });
   </script>
 
   <script>

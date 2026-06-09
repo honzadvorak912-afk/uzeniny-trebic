@@ -311,16 +311,16 @@
       renderProducts(); saveToGitHub(null);
 
     } else if (action === "toggle-custom") {
-      var id = parseInt(btn.dataset.id);
+      var id = String(btn.dataset.id);
       var pos2 = DB.hiddenCustomProducts.indexOf(id);
       if (pos2 >= 0) DB.hiddenCustomProducts.splice(pos2, 1); else DB.hiddenCustomProducts.push(id);
       renderProducts(); saveToGitHub(null);
 
     } else if (action === "delete-custom") {
       if (!confirm("Opravdu smazat?")) return;
-      var id2 = parseInt(btn.dataset.id);
-      DB.adminProducts = DB.adminProducts.filter(function(p){ return p.id !== id2; });
-      DB.hiddenCustomProducts = DB.hiddenCustomProducts.filter(function(h){ return h !== id2; });
+      var id2 = String(btn.dataset.id);
+      DB.adminProducts = DB.adminProducts.filter(function(p){ return String(p.id) !== id2; });
+      DB.hiddenCustomProducts = DB.hiddenCustomProducts.filter(function(h){ return String(h) !== id2; });
       renderProducts(); saveToGitHub(null);
     }
   });;;;
@@ -377,7 +377,7 @@
     if (DB.adminProducts.length > 0) {
       html += "<div class=\"admin-section-divider\">Přidané produkty</div>";
       DB.adminProducts.forEach(function(p) {
-        var hidden = DB.hiddenCustomProducts.indexOf(p.id) >= 0;
+        var hidden = DB.hiddenCustomProducts.indexOf(String(p.id)) >= 0;
         html += "<div class=\"admin-product-item" + (hidden ? " is-hidden" : "") + "\">" +
           (p.image ? "<img class=\"admin-product-img\" src=\"" + p.image + "\" alt=\"\">" : "") +
           "<div class=\"admin-product-info\">" +

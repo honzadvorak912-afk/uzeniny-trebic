@@ -228,9 +228,33 @@
       .catch(function(e) { showSync("Chyba načtení: " + e.message, "err"); });
   }
 
-  // SAVE TO GITHUB — vždy načte aktuální SHA
+  // SAVE TO GITHUB — serializované ukládání (zabrání konfliktu verzí při rychlém klikání)
+  var _saving = false;     // probíhá právě ukládání?
+  var _pending = false;    // čeká další ukládání ve frontě?
+  var _pendingCb = null;   // callback čekajícího ukládání
+
   function saveToGitHub(callback) {
+    if (_saving) {                       // už se ukládá → zařaď do fronty
+      _pending = true;
+      if (callback) _pendingCb = callback;
+      return;
+    }
+    _saving = true;
     showSync("Ukládám...", "loading");
+    _doSave(callback, 1);                // 1 = počet automatických opakování při neúspěchu
+  }
+
+  function _finishSave() {
+    _saving = false;
+    if (_pending) {                      // mezitím přišel další požadavek → spusť ho
+      _pending = false;
+      var cb = _pendingCb; _pendingCb = null;
+      saveToGitHub(cb);
+    }
+  }
+
+  function _doSave(callback, triesLeft) {
+    // VŽDY si načte čerstvé SHA těsně před zápisem
     fetch(GH_API, { headers: { "Authorization": "token " + GH_TOKEN } })
       .then(function(r) { return r.json(); })
       .then(function(meta) {
@@ -248,9 +272,18 @@
           showSync("Uloženo!", "ok");
           setTimeout(function() { syncStatus.style.display = "none"; }, 2000);
           if (callback) callback();
-        } else { showSync("Chyba: " + (data.message||""), "err"); }
+          _finishSave();
+        } else if (triesLeft > 0) {
+          _doSave(callback, triesLeft - 1);   // nejčastěji konflikt verzí → zkus znovu s čerstvým SHA
+        } else {
+          showSync("Chyba: " + (data.message || ""), "err");
+          _finishSave();
+        }
       })
-      .catch(function(e) { showSync("Chyba: " + e.message, "err"); });
+      .catch(function(e) {
+        if (triesLeft > 0) { _doSave(callback, triesLeft - 1); }
+        else { showSync("Chyba: " + e.message, "err"); _finishSave(); }
+      });
   }
 
   var STATIC_PRODUCTS = [

@@ -121,10 +121,25 @@
 
 <script>
   var ADMIN_PASSWORD = "uzeniny2024";
-  var GH_TOKEN = (function(){var a="github_pat_11B6PQH4I0XPqBPWrSQYPm_",b="8j1R2Vatk2PyO1bhwChQ11pXpBhzbAKjmVUFFGkzPygYN3OW2UN17byKQRn";return a+b;})();
+  var WORKER_URL = "https://uzeniny-admin.honzadvorak912.workers.dev"; // ukládání jde přes Worker (token je schovaný tam)
   var GH_REPO = "honzadvorak912-afk/uzeniny-trebic";
   var GH_FILE = "products.json";
   var GH_API  = "https://api.github.com/repos/" + GH_REPO + "/contents/" + GH_FILE;
+  var SESSION_PWD = sessionStorage.getItem("adminPwd") || ""; // heslo pro ověření při ukládání
+
+  // Veřejné čtení products.json (bez tokenu) – GitHub API jako první, raw jako záloha
+  function fetchDB() {
+    return fetch(GH_API + "?t=" + Date.now(), { cache: "no-store" })
+      .then(function(r){ if(!r.ok) throw new Error("api " + r.status); return r.json(); })
+      .then(function(data){
+        var bytes = Uint8Array.from(atob(data.content.replace(/\n/g,"")), function(c){return c.charCodeAt(0);});
+        return JSON.parse(new TextDecoder("utf-8").decode(bytes));
+      })
+      .catch(function(){
+        return fetch("https://raw.githubusercontent.com/" + GH_REPO + "/main/" + GH_FILE + "?t=" + Date.now(), { cache: "no-store" })
+          .then(function(r){ return r.json(); });
+      });
+  }
 
   var loginOverlay  = document.getElementById("loginOverlay");
   var adminPanel    = document.getElementById("adminPanel");
@@ -139,22 +154,17 @@
   // LOGIN — načte heslo z DB
   document.getElementById("loginBtn").addEventListener("click", function() {
     var pwd = passwordInput.value;
-    fetch(GH_API, { headers: { "Authorization": "token " + GH_TOKEN } })
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
-        var bytes = Uint8Array.from(atob(data.content.replace(/\n/g,"")), function(c){return c.charCodeAt(0);});
-        var db = JSON.parse(new TextDecoder("utf-8").decode(bytes));
-        if (pwd === (db.password || ADMIN_PASSWORD)) {
-          loginOverlay.style.display = "none"; adminPanel.style.display = "block";
-          sessionStorage.setItem("adminAuth","1"); loadFromGitHub();
-        } else { loginError.style.display = "block"; passwordInput.value = ""; passwordInput.focus(); }
-      })
-      .catch(function() {
-        if (pwd === ADMIN_PASSWORD) {
-          loginOverlay.style.display = "none"; adminPanel.style.display = "block";
-          sessionStorage.setItem("adminAuth","1"); loadFromGitHub();
-        } else { loginError.style.display = "block"; passwordInput.value = ""; passwordInput.focus(); }
-      });
+    function ok() {
+      SESSION_PWD = pwd;
+      sessionStorage.setItem("adminAuth","1");
+      sessionStorage.setItem("adminPwd", pwd);
+      loginOverlay.style.display = "none"; adminPanel.style.display = "block";
+      loadFromGitHub();
+    }
+    function bad() { loginError.style.display = "block"; passwordInput.value = ""; passwordInput.focus(); }
+    fetchDB()
+      .then(function(db) { if (pwd === (db.password || ADMIN_PASSWORD)) ok(); else bad(); })
+      .catch(function() { if (pwd === ADMIN_PASSWORD) ok(); else bad(); });
   });
   passwordInput.addEventListener("keydown", function(e) {
     if (e.key === "Enter") document.getElementById("loginBtn").click();
@@ -207,11 +217,9 @@
   // LOAD FROM GITHUB
   function loadFromGitHub() {
     showSync("Načítám z GitHubu...", "loading");
-    fetch(GH_API, { headers: { "Authorization": "token " + GH_TOKEN } })
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
-        var bytes = Uint8Array.from(atob(data.content.replace(/\n/g,"")), function(c){return c.charCodeAt(0);});
-        DB = JSON.parse(new TextDecoder("utf-8").decode(bytes));
+    fetchDB()
+      .then(function(db) {
+        DB = db;
         if (!DB.adminProducts) DB.adminProducts = [];
         if (!DB.hiddenProducts) DB.hiddenProducts = [];
         if (!DB.deletedStaticProducts) DB.deletedStaticProducts = [];
@@ -252,29 +260,27 @@
   }
 
   function _doSave(callback, triesLeft) {
-    // VŽDY si načte čerstvé SHA těsně před zápisem
-    fetch(GH_API, { headers: { "Authorization": "token " + GH_TOKEN } })
-      .then(function(r) { return r.json(); })
-      .then(function(meta) {
-        var jsonStr = JSON.stringify(DB, null, 2);
-        var enc = btoa(Array.from(new TextEncoder().encode(jsonStr)).map(function(b){return String.fromCharCode(b);}).join(""));
-        return fetch(GH_API, {
-          method: "PUT",
-          headers: { "Authorization": "token " + GH_TOKEN, "Content-Type": "application/json" },
-          body: JSON.stringify({ message: "Admin: update products.json", content: enc, sha: meta.sha })
-        });
-      })
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
-        if (data.content) {
+    // Ukládání jde přes Worker: pošleme heslo + data, Worker ověří a zapíše (token zná jen on)
+    fetch(WORKER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password: SESSION_PWD, data: DB })
+    })
+      .then(function(r) { return r.json().then(function(j){ return { status: r.status, body: j }; }); })
+      .then(function(res) {
+        if (res.body && res.body.ok) {
           showSync("Uloženo!", "ok");
           setTimeout(function() { syncStatus.style.display = "none"; }, 2000);
           if (callback) callback();
           _finishSave();
+        } else if (res.status === 401) {
+          // špatné heslo – opakování by nepomohlo
+          showSync("Chyba: " + ((res.body && res.body.error) || "Špatné heslo"), "err");
+          _finishSave();
         } else if (triesLeft > 0) {
-          _doSave(callback, triesLeft - 1);   // nejčastěji konflikt verzí → zkus znovu s čerstvým SHA
+          _doSave(callback, triesLeft - 1);   // přechodná chyba → zkus znovu
         } else {
-          showSync("Chyba: " + (data.message || ""), "err");
+          showSync("Chyba: " + ((res.body && res.body.error) || "ukládání selhalo"), "err");
           _finishSave();
         }
       })
@@ -438,7 +444,9 @@
     if (newPwd !== confirmPwd) { errEl.textContent = "Hesla se neshodují."; errEl.style.display = "block"; return; }
     DB.password = newPwd;
     saveToGitHub(function() {
-      okEl.textContent = "Heslo změn! Příště se přihlaš novým heslem.";
+      SESSION_PWD = newPwd;
+      sessionStorage.setItem("adminPwd", newPwd);
+      okEl.textContent = "Heslo změněno!";
       okEl.style.display = "block";
       document.getElementById("newPassword").value = "";
       document.getElementById("confirmPassword").value = "";
